@@ -1,5 +1,5 @@
 import unittest
-from ../day02 import execute, parseProgram
+from ../solution02 import execute, parseProgram
 
 suite "Program execution":
   test "Program '1,9,10,3,2,3,11,0,99,30,40,50'":
