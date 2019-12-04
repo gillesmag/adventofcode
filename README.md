@@ -15,7 +15,7 @@ The programming language of choice for this project is [https://nim-lang.org](Ni
 | [04] | :star::star:    | :white_check_mark: | :white_check_mark: |
 
 
-[01]: advent-of-code-2019/blob/master/day01/solution01.nim
-[02]: advent-of-code-2019/blob/master/day02/solution02.nim
-[03]: advent-of-code-2019/blob/master/day03/solution03.nim
-[04]: advent-of-code-2019/blob/master/day04/solution04.nim
+[01]: day01/solution01.nim
+[02]: day02/solution02.nim
+[03]: day03/solution03.nim
+[04]: day04/solution04.nim
