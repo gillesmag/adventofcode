@@ -3,7 +3,7 @@
 ![Last Commit on GitHub](https://img.shields.io/github/last-commit/gillesmag/advent-of-code-2019.svg)
 
 This repository will contain the solutions for each day of the [Advent of Code](https://adventofcode.com/).
-The programming language of choice for this project is [https://nim-lang.org](Nim).
+The programming language of choice for this project is [Nim](https://nim-lang.org).
 
 ## Solutions
 
