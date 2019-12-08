@@ -14,8 +14,8 @@ The programming language of choice for this project is [Nim](https://nim-lang.or
 | [03] | :star:          | :x:                | :x:                |
 | [04] | :star::star:    | :white_check_mark: | :white_check_mark: |
 | [05] | :star:          | :x:                | :x:                |
-| [06] |                 | :x:                | :x:                |
-| [07] |                 | :x:                | :x:                |
+| 06   |                 | :x:                | :x:                |
+| 07   |                 | :x:                | :x:                |
 | [08] | :star::star:    | :white_check_mark: | :x:                |
 
 
