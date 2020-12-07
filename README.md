@@ -3,9 +3,9 @@
 ![Last Commit on GitHub](https://img.shields.io/github/last-commit/gillesmag/advent-of-code.svg)
 
 As many people, I have decided to participate in the Advent of Code this year as
-well (after last year's (utter
-failure)[https://github.com/gillesmag/advent-of-code-2019] to finish). This
-year, I wanted to try learning (https://julialang.org/)[Julia] as I've been very
+well (after last year's [utter
+failure](https://github.com/gillesmag/advent-of-code-2019) to finish). This
+year, I wanted to try learning [Julia](https://julialang.org/) as I've been very
 intrigued by the language as a replacement for my personal Python development
 (as well as some courses that I will be taking in the new year).
 
