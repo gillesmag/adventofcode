@@ -68,14 +68,9 @@ function main()
         acc, pc = run_program(new_instructions)
         if pc-1 == length(instructions)
             println(acc)
+            break
         end
     end
-
-    # println(instructions)
-    # println(mutate_instructions(1, instructions))
-    # println(instructions)
-
-    #println(length(instructions))
 end
 
 main()
