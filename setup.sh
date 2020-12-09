@@ -18,5 +18,6 @@ NEW_DAY_PATH="$SCRIPTPATH/day_$DAY"
 if [ ! -d "$NEW_DAY_PATH" ]; then
 	mkdir "$NEW_DAY_PATH" && \
 	rm -f today && \
-	ln -s "$NEW_DAY_PATH" today
+	ln -s "$NEW_DAY_PATH" today && \
+	touch "$NEW_DAY_PATH"/{main.jl,{test,input}.txt}
 fi
