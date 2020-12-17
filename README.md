@@ -28,6 +28,8 @@ language), but that's ok.
 | [07] | :star::star:    | :x:                | :x:                |
 | [08] | :star::star:    | :x:                | :x:                |
 | [09] | :star::star:    | :x:                | :x:                |
+| [10] | :star:          | :x:                | :x:                |
+| [11] | :star::star:    | :x:                | :x:                |
 
 
 [01]: day_01/main.jl
@@ -39,3 +41,5 @@ language), but that's ok.
 [07]: day_07/main.jl
 [08]: day_08/main.jl
 [09]: day_09/main.jl
+[10]: day_10/main.jl
+[11]: day_11/main.jl
