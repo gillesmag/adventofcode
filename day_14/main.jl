@@ -133,12 +133,11 @@ end
 function main()
     #filename = "test.txt"
     #filename = "test2.txt"
-    ilename = "input.txt"
+    filename = "input.txt"
     instructions = parse_program(readlines(filename))
     run = v -> println(run_program(instructions, v))
 
-    #run(1)
-
+    run(1)
     run(2)
 end
 
