@@ -75,13 +75,6 @@ function binary_strings(length::Int)
     return numbers
 end
 
-function floating_positions(mask::MaskInstruction)
-    floating_positions = findall(x -> x == 'X', mask.value)
-
-
-
-end
-
 function compute_addresses(mask::MaskInstruction, address::Int)
     mask = mask.value
     address_bits = to_bit_array(address)
@@ -140,7 +133,7 @@ end
 function main()
     #filename = "test.txt"
     #filename = "test2.txt"
-    filename = "input.txt"
+    ilename = "input.txt"
     instructions = parse_program(readlines(filename))
     run = v -> println(run_program(instructions, v))
 
