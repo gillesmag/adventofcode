@@ -1,3 +1,5 @@
+using Test
+
 struct MaskInstruction
     value::String
 end
@@ -129,12 +131,17 @@ function run_program(instructions, decoder_version = 1)
     return sum(values(memory))
 end
 
+function tests()
+    run = (filename, v) -> run_program(parse_program(readlines(filename)), v)
+
+    @test run("test.txt", 1) == 165
+    @test run("test2.txt", 2) == 208
+end
 
 function main()
-    #filename = "test.txt"
-    #filename = "test2.txt"
-    filename = "input.txt"
-    instructions = parse_program(readlines(filename))
+    tests()
+
+    instructions = parse_program(readlines("input.txt"))
     run = v -> println(run_program(instructions, v))
 
     run(1)

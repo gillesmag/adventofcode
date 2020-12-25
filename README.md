@@ -32,7 +32,7 @@ language), but that's ok.
 | [11] | :star::star:    | :x:                | :x:                |
 | [12] | :star::star:    | :x:                | partially          |
 | [13] | :star:          | :x:                | :x:                |
-| [14] | :star::star:    | :x:                | :x:                |
+| [14] | :star::star:    | :x:                | :check:            |
 
 
 [01]: day_01/main.jl
