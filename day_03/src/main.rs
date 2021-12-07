@@ -1,13 +1,28 @@
 use std::fs;
 
+fn bitmap_filter(readings: &mut Vec<Vec<u32>>, bit_criteria: fn(u32, u32) -> bool) -> Option<u32> {
+    for column in 0..readings[0].len() {
+        let rows = readings.iter().count() as u32;
+        let count: u32 = readings.iter().map(|r| r[column]).sum();
+        readings.retain(|row| row[column] == bit_criteria(count, rows - count) as u32);
+        let rows = readings.iter().count() as u32;
+        if rows == 1 {
+            return Some(readings[0].iter().fold(0, |acc, x| acc * 2 + x));
+        }
+    }
+    None
+}
+
 fn main() {
     let filename = "test.txt";
     //let filename = "input.txt";
 
     let str_lines = fs::read_to_string(filename).expect("Something went wrong reading the file");
 
-    let lines: Vec<Vec<u32>> = str_lines
-        .lines()
+    let lines: Vec<&str> = str_lines.lines().into_iter().collect();
+
+    let readings: Vec<Vec<u32>> = lines
+        .clone()
         .into_iter()
         .map(|l| {
             l.chars()
@@ -17,77 +32,34 @@ fn main() {
         .collect();
 
     // Part A
-    let rows = lines.len();
-    let columns = lines[0].len();
+    let rows = readings.len();
+    let columns = readings[0].len();
 
-    let values = (0..columns)
+    let counts = (0..columns)
         .into_iter()
-        .map(|c| (0..rows).into_iter().map(|r| lines[r][c]).sum());
+        .map(|c| (0..rows).into_iter().map(|r| readings[r][c]).sum());
 
-
-    println!("{:?}", values.clone().collect::<Vec<u32>>());
-
-    let binary_values = values
+    let most_common_values = counts
         .clone()
         .map(|s: u32| (s > (rows as u32) / 2) as u32)
         .collect::<Vec<u32>>();
 
-    let b_values = values
-        .clone()
-        .map(|ones: u32| if ones < (rows as u32) - ones { 1 } else { if (rows as u32) - ones <= ones { 0 } else { 1 } })
-        .collect::<Vec<u32>>();
+    let gamma = most_common_values.iter().fold(0, |acc, &x| acc * 2 + x);
 
-    println!("{}", rows);
-
-    println!("{:?}", b_values);
-
-    let gamma = binary_values
+    let epsilon = most_common_values
         .iter()
-        .fold(0, |accum, &item| (accum << 1) + item as u32);
+        .map(|&val| if val == 0 { 1 } else { 0 })
+        .fold(0, |acc, x| acc * 2 + x);
 
-    let epsilon = binary_values
-        .iter()
-        .fold(0, |accum, &item| (accum << 1) + (item != 1 as u32) as u32);
+    let power_consumption = gamma * epsilon;
 
-    println!("Part A: {}", gamma * epsilon);
+    println!("{}", power_consumption);
 
     // Part B
-    let binary_numbers: Vec<u32> = str_lines
-        .lines()
-        .clone()
-        .filter_map(|num| u32::from_str_radix(num, 2).ok())
-        .collect();
-
-    let mut accum = 0;
-    let mut i = 0;
-
-    for v in values {
-        println!("{}", v);
-        accum = accum*2 + v;
-    
-        let remaining_nums = binary_numbers.iter().filter(|&num| accum == (num >> i));
-        println!("{}", remaining_nums.collect::<Vec<&u32>>().len());
-        i += 1;
-    }
-
-    println!("Part B");
-
-    let oxygen_generator_rating = binary_numbers
-        .iter()
-        .filter(|&num| (num >> 1) == (gamma >> 1))
-        .max()
-        .unwrap();
-    println!("Oxygen generator rating: {}", oxygen_generator_rating);
-    println!("{:?}", binary_numbers);
-
-    let binary_numbers: Vec<u32> = str_lines
-        .lines()
-        .filter_map(|num| u32::from_str_radix(num, 2).ok())
-        .filter(|num| (num >> 1) == epsilon)
-        .collect();
-
-    println!("{:#b}", gamma);
-    println!("{:#b}", epsilon);
-
-    println!("{:?}", binary_numbers);
+    let o2_generator_rating = bitmap_filter(&mut readings.clone(), |ones, zeros| ones >= zeros);
+    let co2_scrubber_rating = bitmap_filter(&mut readings.clone(), |ones, zeros| ones < zeros);
+    match (o2_generator_rating, co2_scrubber_rating) {
+        (Some(o2), Some(co2)) => println!("{:?}", o2 * co2),
+        _ => (),
+    };
 }
