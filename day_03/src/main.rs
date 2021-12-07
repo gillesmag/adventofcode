@@ -14,8 +14,8 @@ fn bitmap_filter(readings: &mut Vec<Vec<u32>>, bit_criteria: fn(u32, u32) -> boo
 }
 
 fn main() {
-    let filename = "test.txt";
-    //let filename = "input.txt";
+    //let filename = "test.txt";
+    let filename = "input.txt";
 
     let str_lines = fs::read_to_string(filename).expect("Something went wrong reading the file");
 
