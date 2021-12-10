@@ -1,4 +1,3 @@
-use std::collections::VecDeque;
 use std::fs;
 
 fn main() {
@@ -9,78 +8,53 @@ fn main() {
     let lines = file.lines().collect::<Vec<&str>>();
 
     let mut points = 0;
-    let mut incomplete_lines: Vec<VecDeque<char>> = vec![];
-
-    for line in lines {
-        let mut q: VecDeque<char> = VecDeque::new();
-        let mut incorrect = false;
-
-        for c in line.chars() {
-            if ![')', '}', ']', '>'].contains(&c) {
-                q.push_back(c);
-                continue;
-            }
-            if let Some(last) = q.back() {
-                if (*last == '(' && c == ')')
-                    || (*last == '{' && c == '}')
-                    || (*last == '[' && c == ']')
-                    || (*last == '<' && c == '>')
-                {
-                    q.pop_back();
-                } else {
-                    points += match c {
-                        ')' => 3,
-                        ']' => 57,
-                        '}' => 1197,
-                        '>' => 25137,
-                        _ => 0,
-                    };
-                    //println!("Error: {} {}", c, last);
-                    //println!("{}", c);
-                    //println!("{}", line);
-                    //for i in 0..idx {
-                    //    print!(" ");
-                    //}
-                    //println!("^");
-                    incorrect = true;
-                    break;
-                }
-            }
-        }
-        if q.len() > 0 && !incorrect {
-            incomplete_lines.push(q.clone());
-        }
-    }
-
-    println!("{}", points);
-
-    //println!("{:?}", incomplete_lines.len());
-
     let mut scores: Vec<usize> = vec![];
 
-    for incomplete in &mut incomplete_lines {
-        //println!("{:?}", incomplete);
+    for line in lines {
+        let mut stack: Vec<char> = vec![];
+        let mut corrupted = false;
 
-        let mut score = 0;
-        loop {
-            let last = incomplete.pop_back();
-            if let Some(c) = last {
-                score *= 5;
-                score += match c {
-                    '(' => 1,
-                    '[' => 2,
-                    '{' => 3,
-                    '<' => 4,
-                    _ => 0,
-                };
-            } else {
+        for c in line.chars() {
+            match c {
+                '(' | '[' | '{' | '<' => stack.push(c),
+                ')' | ']' | '}' | '>' => {
+                    let previous = stack.pop().unwrap();
+                    let matching = match (previous, c) {
+                        ('(', ')') | ('[', ']') | ('{', '}') | ('<', '>') => true,
+                        _ => false,
+                    };
+                    if !matching {
+                        points += match c {
+                            ')' => 3,
+                            ']' => 57,
+                            '}' => 1197,
+                            '>' => 25137,
+                            _ => unreachable!(),
+                        };
+                        corrupted = true;
+                    }
+                }
+                _ => unreachable!(),
+            }
+            if corrupted {
                 break;
             }
         }
-        scores.push(score);
+        if stack.len() > 0 && !corrupted {
+            scores.push(stack.iter().rev().fold(0, |acc, val| {
+                acc * 5
+                    + match val {
+                        '(' => 1,
+                        '[' => 2,
+                        '{' => 3,
+                        '<' => 4,
+                        _ => 0,
+                    }
+            }))
+        }
     }
+    scores.sort_unstable();
 
-    scores.sort();
-
+    println!("{}", points);
     println!("{:?}", scores[scores.len() / 2]);
 }
