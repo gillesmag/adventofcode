@@ -110,7 +110,7 @@ fn main() {
                     .filter_map(|v| v)
                     .filter_map(|idx| values[idx])
                     .fold(0, |acc, val| acc * 10 + val);
-                    //.collect::<Vec<usize>>();
+                //.collect::<Vec<usize>>();
                 total += output_val;
                 println!("output: {:?}", output_val);
                 break;
