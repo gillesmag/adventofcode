@@ -32,12 +32,10 @@ fn main() {
                             _ => unreachable!(),
                         };
                         corrupted = true;
+                        break;
                     }
                 }
                 _ => unreachable!(),
-            }
-            if corrupted {
-                break;
             }
         }
         if stack.len() > 0 && !corrupted {
