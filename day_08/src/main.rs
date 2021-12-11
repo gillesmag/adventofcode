@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use std::collections::HashMap;
 use std::fs;
 
 fn parse_segment(positions: &Vec<usize>) -> Option<usize> {
@@ -35,45 +34,48 @@ fn main() {
         .map(|line| {
             line.split(" | ")
                 .map(|part| part.split(" ").collect::<Vec<&str>>())
-                .collect::<Vec<Vec<&str>>>()
+                .collect::<Vec<_>>()
         })
         .collect::<Vec<_>>();
-
-    let mut counter = 0;
-
-    for line in &input {
-        let (patterns, output) = (&line[0], &line[1]);
-        let lengths = output.into_iter().map(|v| v.len()).collect::<Vec<usize>>();
-        //println!("{:?}: {:?}", output, lengths);
-
-        for length in lengths {
-            //println!("{}", length);
-            if [2, 4, 3, 7].contains(&length) {
-                counter += 1;
-            }
-        }
-    }
-    //println!("{}", counter);
 
     let perms = ('a'..='g')
         .into_iter()
         .permutations(7)
         .collect::<Vec<Vec<char>>>();
-    //println!("{:?}", perms);
 
-    let digit_mapping: HashMap<&str, usize> = HashMap::new();
-
+    let mut unique_counter = 0;
     let mut total = 0;
+
+    let mut values: Vec<Option<usize>> = Vec::with_capacity(perms.len());
 
     for line in &input {
         let (patterns, output) = (&line[0], &line[1]);
         let lengths = output.into_iter().map(|v| v.len()).collect::<Vec<usize>>();
-        //println!("{:?}: {:?}", output, lengths);
-        for perm in &perms {
-            //let perm = vec!['d', 'e', 'a', 'f', 'g', 'b', 'c'];
-            //let perm = &perms[0];
-            //println!("{:?}", perm);
-            let mut values: Vec<Option<usize>> = vec![];
+
+        for length in lengths {
+            if [2, 4, 3, 7].contains(&length) {
+                unique_counter += 1;
+            }
+        }
+        let sorted_patterns = patterns
+            .into_iter()
+            .map(|val| {
+                let mut vals = val.chars().collect::<Vec<char>>();
+                vals.sort();
+                vals
+            })
+            .collect::<Vec<Vec<char>>>();
+
+        let output_val = output
+            .into_iter()
+            .map(|val| {
+                let mut vals = val.chars().collect::<Vec<char>>();
+                vals.sort();
+                vals
+            }).collect::<Vec<Vec<char>>>();
+
+        'outer: for perm in &perms {
+            values.clear();
             for pattern in patterns {
                 let mut positions = pattern
                     .chars()
@@ -81,41 +83,25 @@ fn main() {
                     .collect::<Vec<usize>>();
                 positions.sort();
                 let segment_value = parse_segment(&positions);
+                if segment_value.is_none() {
+                    continue 'outer;
+                }
                 values.push(segment_value);
-                //println!("{:?}: {:?}", pattern, positions);
             }
-            //println!("{:?}", values);
-            //println!("{:?}", values.iter().all(|v| v.is_some()));
             if values.iter().all(|v| v.is_some()) {
-                //println!("perm: {:?}", perm);
-                //println!("values: {:?}", values);
-                //println!("pattern: {:?}", patterns);
-                let sorted_patterns = patterns
+                let output_val = output_val
                     .into_iter()
-                    .map(|val| {
-                        let mut vals = val.chars().collect::<Vec<char>>();
-                        vals.sort();
-                        vals
+                    .filter_map(|val| {
+                        sorted_patterns.iter().position(|v| val == *v)
                     })
-                    .collect::<Vec<Vec<char>>>();
-                //println!("{:?}", sorted_patterns);
-                let output_val = output
-                    .into_iter()
-                    .map(|val| {
-                        let mut vals = val.chars().collect::<Vec<char>>();
-                        vals.sort();
-                        sorted_patterns.iter().position(|v| vals == *v)
-                        //vals
-                    })
-                    .filter_map(|v| v)
                     .filter_map(|idx| values[idx])
                     .fold(0, |acc, val| acc * 10 + val);
-                //.collect::<Vec<usize>>();
                 total += output_val;
-                println!("output: {:?}", output_val);
                 break;
             }
         }
     }
-    println!("Total: {:?}", total);
+
+    println!("Part A: {}", unique_counter);
+    println!("Part B: {}", total);
 }
