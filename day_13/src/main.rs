@@ -79,6 +79,8 @@ fn main() {
 
     let mut new_coords: Vec<Vec<usize>> = vec![];
 
+    // First day solution
+    //for inst in instructions.into_iter().take(1) {
     for inst in instructions.into_iter() {
         let (axis, offset) = (inst[0], inst[1].parse::<usize>().unwrap());
 
