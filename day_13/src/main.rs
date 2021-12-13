@@ -1,41 +1,42 @@
+use std::collections::HashSet;
 use std::fs;
-use std::collections::{HashMap, HashSet};
 
-fn print_coords(coords: &Vec<Vec<usize>>) {
-    let max_x = coords.into_iter().map(|v| v[0]).max().unwrap();
-    let max_y = coords.into_iter().map(|v| v[1]).max().unwrap();
+type Instruction<'a> = (&'a str, usize);
+type Coordinate = (usize, usize);
 
-    let mut map: HashMap<usize, Vec<usize>> = HashMap::new();
-    for coord in coords {
-        let e = map.entry(coord[1]).or_insert(vec![]);
-        e.push(coord[0]);
-    }
+fn print_coords(coords: &HashSet<Coordinate>) {
+    let max_x = coords.into_iter().map(|v| v.0).max().unwrap();
+    let max_y = coords.into_iter().map(|v| v.1).max().unwrap();
 
-    let mut sorted_keys = map.keys().collect::<Vec<&usize>>();
-    sorted_keys.sort();
-
-    for row in 0..=max_y {
-        let e = map.get(&row);
-        if e.is_none() {
-            for col in 0..=max_x {
-                print!(" ");
-                print!(".");
-            }
-            println!("");
-            continue;
-        }
-        let e  = e.unwrap();
-        for col in 0..=max_x {
-            if e.contains(&col) {
-                //print!("#");
-                print!("█");
-            } else {
-                //print!(".");
-                print!(" ");
-            }
-        }
+    (0..=max_y).into_iter().for_each(|y| {
+        (0..=max_x)
+            .into_iter()
+            .map(|x| if coords.contains(&(x, y)) { "█" } else { " " })
+            .for_each(|c| print!("{}", c));
         println!("");
+    });
+}
+
+fn fold(coords: &mut Vec<Coordinate>, instructions: &Vec<Instruction>) -> HashSet<Coordinate> {
+    let flipped_coordinate = |coord: usize, offset| {
+        if coord > offset {
+            offset - (coord - offset)
+        } else {
+            coord
+        }
+    };
+
+    for (axis, offset) in instructions.into_iter() {
+        for coord in coords.iter_mut() {
+            *coord = match *axis {
+                "x" => (flipped_coordinate(coord.0, *offset), coord.1),
+                "y" => (coord.0, flipped_coordinate(coord.1, *offset)),
+                _ => unreachable!(),
+            };
+        }
     }
+
+    HashSet::from_iter(coords.iter().cloned())
 }
 
 fn main() {
@@ -43,27 +44,21 @@ fn main() {
     let filename = "input.txt";
 
     let file = fs::read_to_string(filename).expect("Unable to read file");
-
     let mut lines = file.lines().collect::<Vec<&str>>();
 
-    let coords_end = lines.iter().position(|&l| l == "");
-    if coords_end.is_none() {
-        panic!("File incorrectly formatted");
-    }
-    let coords_end = coords_end.unwrap();
-
+    let coords_end = lines.iter().position(|&l| l == "").expect("File incorrectly formatted");
     let mut instructions = lines.split_off(coords_end);
-    let coords = lines;
     instructions.remove(0);
 
-    let mut coords = coords
+    let coords = lines
         .into_iter()
         .map(|v| {
             v.split(",")
                 .filter_map(|c| c.parse().ok())
                 .collect::<Vec<usize>>()
         })
-        .collect::<Vec<Vec<usize>>>();
+        .map(|v| (v[0], v[1]))
+        .collect::<Vec<Coordinate>>();
 
     let instructions = instructions
         .into_iter()
@@ -72,47 +67,15 @@ fn main() {
                 .split("=")
                 .collect::<Vec<&str>>()
         })
-        .collect::<Vec<Vec<&str>>>();
+        .map(|v| (v[0], v[1].parse::<usize>().unwrap()))
+        .collect::<Vec<Instruction>>();
 
-    //println!("{:?}", coords);
-    //println!("{:?}", instructions);
+    // part A
+    let single_instruction = instructions.clone().into_iter().take(1).collect();
+    let new_coords = fold(&mut coords.clone(), &single_instruction);
+    println!("{}", new_coords.len());
 
-    let mut new_coords: Vec<Vec<usize>> = vec![];
-
-    // First day solution
-    //for inst in instructions.into_iter().take(1) {
-    for inst in instructions.into_iter() {
-        let (axis, offset) = (inst[0], inst[1].parse::<usize>().unwrap());
-
-        for coord in &coords {
-            let mut new_coord = vec![0, 0usize];
-            if axis == "x" {
-                if coord[0] > offset {
-                    new_coord[0] = offset - (coord[0] - offset);
-                } else {
-                    new_coord[0] = coord[0];
-                }
-                new_coord[1] = coord[1];
-            } else if axis == "y" {
-                if coord[1] > offset {
-                    new_coord[1] = offset - (coord[1] - offset);
-                } else {
-                    new_coord[1] = coord[1];
-                }
-                new_coord[0] = coord[0];
-            }
-            new_coords.push(new_coord);
-        }
-
-        coords = new_coords.clone();
-        new_coords.clear();
-    }
-
-    let mut unique_coords: HashSet<(usize, usize)> = HashSet::new();
-    for coord in &coords {
-        unique_coords.insert((coord[0], coord[1]));
-    }
-    print_coords(&coords);
-    println!("{}", unique_coords.len());
-    //print_coords(&new_coords);
+    // part B
+    let new_coords = fold(&mut coords.clone(), &instructions);
+    print_coords(&new_coords);
 }
