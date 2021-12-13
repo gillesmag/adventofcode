@@ -46,7 +46,10 @@ fn main() {
     let file = fs::read_to_string(filename).expect("Unable to read file");
     let mut lines = file.lines().collect::<Vec<&str>>();
 
-    let coords_end = lines.iter().position(|&l| l == "").expect("File incorrectly formatted");
+    let coords_end = lines
+        .iter()
+        .position(|&l| l == "")
+        .expect("File incorrectly formatted");
     let mut instructions = lines.split_off(coords_end);
     instructions.remove(0);
 
