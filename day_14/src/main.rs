@@ -2,13 +2,12 @@ use std::collections::HashMap;
 use std::fs;
 
 fn main() {
-    let filename = "test.txt";
+    //let filename = "test.txt";
     let filename = "input.txt";
 
     let file = fs::read_to_string(filename).expect("Unable to read file");
     let lines = file.lines().collect::<Vec<&str>>();
 
-    //let template = String::from("NCNBCHB").chars().into_iter().collect::<Vec<char>>();
     let template = lines[0].clone().chars().collect::<Vec<char>>();
     let rules: HashMap<&str, char> = lines[2..]
         .into_iter()
@@ -22,10 +21,6 @@ fn main() {
         .map(|(left, _)| (String::from(left), 0))
         .collect();
 
-    //println!("{:?}", template);
-    //println!("{:?}", rules);
-    //println!("counts: {:?}", counts);
-
     let tuples = template
         .windows(2)
         .map(|v| v.iter().cloned().collect::<String>())
@@ -33,12 +28,12 @@ fn main() {
     for tuple in tuples {
         counts.entry(tuple).and_modify(|v| *v += 1);
     }
-    //println!("counts: {:?}", counts);
 
     let mut new_counts: HashMap<String, usize> = HashMap::new();
 
+    // Uncomment below for part 1 solution
+    // let steps = 10;
     let steps = 40;
-    // {"NB": 1, "HB": 1, "CH": 1, "BC": 1, "NC": 1, "CN": 1}
     for _step in 1..=steps {
         let keys = counts
             .clone()
@@ -60,19 +55,8 @@ fn main() {
         }
         counts = new_counts.clone();
         new_counts.clear();
-        //println!(
-        //    "step {}: {:?}",
-        //    _step,
-        //    counts
-        //        .clone()
-        //        .into_iter()
-        //        .filter(|(_k, v)| *v > 0)
-        //        .map(|kv| kv)
-        //        .collect::<HashMap<String, usize>>()
-        //);
     }
 
-    //println!("{:?}", counts);
     let mut letters = counts
         .clone()
         .into_iter()
@@ -84,7 +68,7 @@ fn main() {
 
     for letter in &letters {
         let double_letter: String = [*letter, *letter].iter().cloned().collect();
-        let e = counts.entry(double_letter).and_modify(|v| *v *= 2);
+        counts.entry(double_letter).and_modify(|v| *v *= 2);
     }
 
     let all_counts: HashMap<char, usize> = letters
@@ -103,6 +87,6 @@ fn main() {
     let min = all_counts.values().into_iter().min().unwrap();
     let max = all_counts.values().into_iter().max().unwrap();
 
-    println!("{:?}", all_counts);
+    //println!("{:?}", all_counts);
     println!("{}", max - min);
 }
