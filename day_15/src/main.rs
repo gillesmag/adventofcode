@@ -26,7 +26,7 @@ fn total_risk(weights: &Vec<Vec<usize>>) -> Option<usize> {
 }
 
 fn main() {
-    let filename = "test.txt";
+    //let filename = "test.txt";
     let filename = "input.txt";
 
     let file = fs::read_to_string(filename).expect("Unable to read file");
