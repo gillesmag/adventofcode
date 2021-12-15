@@ -19,10 +19,10 @@ fn total_risk(weights: &Vec<Vec<usize>>) -> Option<usize> {
         |p| *p == goal,
     );
 
-    if let Some((_, risk)) = result {
-        return Some(risk);
+    match result {
+        Some((_, risk)) => Some(risk),
+        _ => None
     }
-    None
 }
 
 fn main() {
