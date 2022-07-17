@@ -3,7 +3,7 @@ use std::fs;
 fn triangular_sum(diffs: &Vec<u64>) -> u64 {
     let mut sum = 0;
     for &diff in diffs {
-        sum += (diff * (diff +1)) / 2;
+        sum += (diff * (diff + 1)) / 2;
     }
     sum
 }
@@ -20,12 +20,12 @@ fn compute_fuel_usage(crabs: &Vec<u64>, optimal_pos: u64) -> u64 {
 }
 
 // assumes values are sorted
-fn median(values: &Vec<u64>) -> Option<u64>{
+fn median(values: &Vec<u64>) -> Option<u64> {
     if values.len() == 0 {
         return None;
     }
 
-    Some(values[values.len()/2])
+    Some(values[values.len() / 2])
 }
 
 pub fn day07() {

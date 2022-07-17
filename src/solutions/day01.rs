@@ -8,12 +8,18 @@ fn part_b(nums: Vec<u32>) -> usize {
 }
 
 fn to_depths(contents: &str) -> Vec<u32> {
-    contents.lines().filter_map(|depth| depth.parse().ok()).collect::<Vec<u32>>()
+    contents
+        .lines()
+        .filter_map(|depth| depth.parse().ok())
+        .collect::<Vec<u32>>()
 }
 
 pub fn day01(input: &str) -> (String, String) {
     let depths = to_depths(&input);
-    (part_a(depths.clone()).to_string(), part_b(depths.clone()).to_string())
+    (
+        part_a(depths.clone()).to_string(),
+        part_b(depths.clone()).to_string(),
+    )
 }
 
 #[cfg(test)]

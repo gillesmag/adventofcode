@@ -72,7 +72,8 @@ pub fn day08() {
                 let mut vals = val.chars().collect::<Vec<char>>();
                 vals.sort();
                 vals
-            }).collect::<Vec<Vec<char>>>();
+            })
+            .collect::<Vec<Vec<char>>>();
 
         'outer: for perm in &perms {
             values.clear();
@@ -91,9 +92,7 @@ pub fn day08() {
             if values.iter().all(|v| v.is_some()) {
                 let output_val = output_val
                     .into_iter()
-                    .filter_map(|val| {
-                        sorted_patterns.iter().position(|v| val == *v)
-                    })
+                    .filter_map(|val| sorted_patterns.iter().position(|v| val == *v))
                     .filter_map(|idx| values[idx])
                     .fold(0, |acc, val| acc * 10 + val);
                 total += output_val;

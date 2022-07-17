@@ -65,7 +65,9 @@ pub fn day12() {
             let l = prefix.last().unwrap();
             if let Some(next) = graph.get(l) {
                 for n in next {
-                    if (prefix.contains(&n) && n.chars().all(|v| v.is_ascii_lowercase())) && contains_twice(&prefix) {
+                    if (prefix.contains(&n) && n.chars().all(|v| v.is_ascii_lowercase()))
+                        && contains_twice(&prefix)
+                    {
                         continue;
                     }
                     let mut new = prefix.clone();

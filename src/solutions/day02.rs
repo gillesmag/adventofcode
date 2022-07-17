@@ -54,9 +54,11 @@ fn parse_lines(input: &str) -> Vec<(&str, i32)> {
 
 pub fn day02(input: &str) -> (String, String) {
     let lines = parse_lines(&input);
-    (part_a(lines.clone()).to_string(), part_b(lines.clone()).to_string())
+    (
+        part_a(lines.clone()).to_string(),
+        part_b(lines.clone()).to_string(),
+    )
 }
-
 
 #[cfg(test)]
 mod tests {

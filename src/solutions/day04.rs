@@ -1,5 +1,3 @@
-use std::fs;
-
 type Board<T> = Vec<T>;
 
 fn check_board(board: &Board<bool>) -> bool {
@@ -13,9 +11,7 @@ fn check_board(board: &Board<bool>) -> bool {
 
 fn mark_boards(num: u32, boards: &Vec<Board<u32>>, markers: &mut Vec<Board<bool>>) {
     // find number we're looking for and mark it on each board
-    let indices = boards
-        .iter()
-        .map(|b| b.iter().position(|&v| v == num));
+    let indices = boards.iter().map(|b| b.iter().position(|&v| v == num));
     for (i, idx) in indices.enumerate() {
         if let Some(board) = idx {
             markers[i][board] = true;
@@ -27,7 +23,7 @@ fn compute_score(board: &Board<u32>, marked_board: &Board<bool>) -> u32 {
     board
         .iter()
         .enumerate()
-        .filter_map(|(idx, item)| (!marked_board[idx]).then(|| item) )
+        .filter_map(|(idx, item)| (!marked_board[idx]).then(|| item))
         .sum()
 }
 
@@ -61,7 +57,6 @@ pub fn day04(input: &str) -> (String, String) {
                 .collect()
         })
         .collect();
-
 
     let mut marked_boards: Vec<Board<bool>> = (0..boards.len())
         .into_iter()
@@ -100,5 +95,8 @@ pub fn day04(input: &str) -> (String, String) {
         }
     }
 
-    (part_a_solution.unwrap().to_string(), part_b_solution.to_string())
+    (
+        part_a_solution.unwrap().to_string(),
+        part_b_solution.to_string(),
+    )
 }

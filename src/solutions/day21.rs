@@ -36,6 +36,6 @@ pub fn day21() {
     for (i, j, k) in iproduct!(i.clone(), i.clone(), i.clone()) {
         println!("{:?} {:?} {:?}", i, j, k);
     }
-    
+
     println!("{:?}", i);
 }

@@ -21,7 +21,7 @@ fn total_risk(weights: &Vec<Vec<usize>>) -> Option<usize> {
 
     match result {
         Some((_, risk)) => Some(risk),
-        _ => None
+        _ => None,
     }
 }
 

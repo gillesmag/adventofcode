@@ -1,5 +1,5 @@
-use std::env;
 use aoc::read_file;
+use std::env;
 
 mod solutions;
 
@@ -36,26 +36,31 @@ fn main() {
             println!("Part A: {}", part_a);
             println!("Part B: {}", part_b);
             ()
-        },
+        }
         2 => {
             let (part_a, part_b) = day02(&input);
             println!("Part A: {}", part_a);
             println!("Part B: {}", part_b);
             ()
-        },
+        }
         3 => {
             let (part_a, part_b) = day03(&input);
             println!("Part A: {}", part_a);
             println!("Part B: {}", part_b);
             ()
-        },
+        }
         4 => {
             let (part_a, part_b) = day04(&input);
             println!("Part A: {}", part_a);
             println!("Part B: {}", part_b);
             ()
-        },
-        5 => day05(),
+        }
+        5 => {
+            let (part_a, part_b) = day05(&input);
+            println!("Part A: {}", part_a);
+            println!("Part B: {}", part_b);
+            ()
+        }
         6 => day06(),
         7 => day07(),
         8 => day08(),

@@ -56,5 +56,8 @@ pub fn day03(input: &str) -> (String, String) {
         })
         .collect();
 
-    (part_a(readings.clone()).to_string(), part_b(readings.clone()).unwrap().to_string())
+    (
+        part_a(readings.clone()).to_string(),
+        part_b(readings.clone()).unwrap().to_string(),
+    )
 }
