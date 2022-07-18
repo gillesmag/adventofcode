@@ -177,17 +177,26 @@ fn parse(input: &str) -> Packet {
     parse_packet(&mut binary_data.iter())
 }
 
+fn part_a(packet: Packet) -> u64 {
+    compute_sum(packet.clone())
+}
+
+fn part_b(packet: Packet) -> u64 {
+    eval_packet(packet)
+}
+
 pub fn day16(input: &str) -> (String, String) {
     let packet = parse(input);
     (
-        compute_sum(packet.clone()).to_string(),
-        eval_packet(packet).to_string(),
+        part_a(packet.clone()).to_string(),
+        part_b(packet.clone()).to_string(),
     )
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use aoc::read_file;
 
     #[test]
     fn version_sum() {
@@ -226,5 +235,19 @@ mod tests {
             let packet = parse_packet(&mut data.iter());
             assert_eq!(eval_packet(packet), expected);
         }
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 16);
+        let packet = parse(&input);
+        assert_eq!(part_a(packet), 947);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 16);
+        let packet = parse(&input);
+        assert_eq!(part_b(packet), 660797830937);
     }
 }

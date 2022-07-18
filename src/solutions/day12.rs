@@ -53,7 +53,11 @@ fn process_graph(graph: Graph, visit_twice: bool) -> usize {
             let l = prefix.last().unwrap();
             if let Some(next) = graph.get(l) {
                 for n in next {
-                    let at_least_once = if visit_twice {contains_twice(&prefix)  } else { true };
+                    let at_least_once = if visit_twice {
+                        contains_twice(&prefix)
+                    } else {
+                        true
+                    };
                     if (prefix.contains(&n) && n.chars().all(|v| v.is_ascii_lowercase()))
                         && at_least_once
                     {
@@ -101,7 +105,6 @@ pub fn day12(input: &str) -> (String, String) {
     let graph = parse(input);
     (part_a(graph.clone()).to_string(), part_b(graph).to_string())
 }
-
 
 #[cfg(test)]
 mod tests {
