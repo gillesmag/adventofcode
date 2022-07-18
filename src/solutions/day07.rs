@@ -1,5 +1,3 @@
-use std::fs;
-
 fn triangular_sum(diffs: &Vec<u64>) -> u64 {
     let mut sum = 0;
     for &diff in diffs {
@@ -28,12 +26,8 @@ fn median(values: &Vec<u64>) -> Option<u64> {
     Some(values[values.len() / 2])
 }
 
-pub fn day07() {
-    //let filename = "test.txt";
-    let filename = "src/inputs/day7.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-    let mut crabs: Vec<u64> = file.lines().collect::<Vec<&str>>()[0]
+pub fn day07(input: &str) -> (String, String) {
+    let mut crabs: Vec<u64> = input.lines().collect::<Vec<&str>>()[0]
         .split(",")
         .filter_map(|val| val.parse().ok())
         .collect();
@@ -42,10 +36,6 @@ pub fn day07() {
 
     let optimal_distance = median(&crabs).unwrap();
     let fuel_usage = compute_fuel_usage(&crabs, optimal_distance);
-
-    //println!("{}", crabs.len());
-    //println!("{}", optimal_distance);
-    println!("{}", fuel_usage);
 
     let min_pos = crabs[0].clone();
     let max_pos = crabs.last().unwrap().clone();
@@ -57,7 +47,10 @@ pub fn day07() {
             distances.push(dist.abs() as u64);
         }
         fuel_sums.push(triangular_sum(&distances));
-        //println!("{}: {:?}", ), distances);
     }
-    println!("{}", fuel_sums.iter().min().unwrap());
+
+    (
+        fuel_usage.to_string(),
+        fuel_sums.iter().min().unwrap().to_string(),
+    )
 }

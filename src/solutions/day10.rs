@@ -1,11 +1,5 @@
-use std::fs;
-
-pub fn day10() {
-    //let filename = "test.txt";
-    let filename = "src/inputs/day10.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-    let lines = file.lines().collect::<Vec<&str>>();
+pub fn day10(input: &str) -> (String, String) {
+    let lines = input.lines().collect::<Vec<&str>>();
 
     let mut points = 0;
     let mut scores: Vec<usize> = vec![];
@@ -53,6 +47,5 @@ pub fn day10() {
     }
     scores.sort_unstable();
 
-    println!("{}", points);
-    println!("{:?}", scores[scores.len() / 2]);
+    (points.to_string(), scores[scores.len() / 2].to_string())
 }

@@ -1,5 +1,3 @@
-use std::fs;
-
 use core::slice::Iter;
 use std::fmt::Debug;
 
@@ -173,16 +171,15 @@ fn parse_data(input: &str) -> Vec<bool> {
     to_bits(&decoded_data)
 }
 
-pub fn day16() {
-    let filename = "src/inputs/day16.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-    let hex_data = file.lines().into_iter().nth(0).unwrap();
+fn parse(input: &str) -> Packet {
+    let hex_data = input.lines().into_iter().nth(0).unwrap();
     let binary_data = parse_data(hex_data);
-    let packet = parse_packet(&mut binary_data.iter());
+    parse_packet(&mut binary_data.iter())
+}
 
-    println!("{}", compute_sum(packet.clone()));
-    println!("{}", eval_packet(packet));
+pub fn day16(input: &str) -> (String, String) {
+    let packet = parse(input);
+    (compute_sum(packet.clone()).to_string(), eval_packet(packet).to_string())
 }
 
 #[cfg(test)]

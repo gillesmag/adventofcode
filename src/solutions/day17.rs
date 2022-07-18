@@ -1,11 +1,5 @@
-use std::fs;
-
-pub fn day17() {
-    let filename = "src/inputs/day17.txt";
-    //let filename = "test.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-    let line = file.lines().collect::<Vec<&str>>()[0];
+fn parse(input: &str) -> (Vec<i32>, Vec<i32>) {
+    let line = input.lines().collect::<Vec<&str>>()[0];
 
     let parts: Vec<_> = line.split(" ").collect();
     let x_range: &str = parts[2]
@@ -24,12 +18,17 @@ pub fn day17() {
         .filter_map(|v| v.parse::<i32>().ok())
         .collect();
 
-    let max_height = (ys[0]..=ys[1])
+    (xs, ys)
+}
+
+fn part_a(ys: &Vec<i32>) -> i32 {
+    (ys[0]..=ys[1])
         .map(|y| (-y) * ((-y) - 1) / 2)
         .max()
-        .unwrap();
-    println!("{:?}", max_height);
+        .unwrap()
+}
 
+fn part_b(xs: &Vec<i32>, ys: &Vec<i32>) -> usize {
     let max_x = xs[1];
     let max_y = ys[0];
 
@@ -55,5 +54,12 @@ pub fn day17() {
             }
         }
     }
-    println!("{:?}", candidates.len());
+
+    candidates.len()
+}
+
+pub fn day17(input: &str) -> (String, String) {
+    //let filename = "test.txt";
+    let (xs, ys) = parse(input);
+    (part_a(&ys).to_string(), part_b(&xs, &ys).to_string())
 }

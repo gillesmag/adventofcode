@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::fs;
 
 type Grid = Vec<Vec<usize>>;
 type Coordinate = (usize, usize);
@@ -153,13 +152,8 @@ fn part_2(grid: &Grid) -> usize {
         .fold(1, |acc, val| acc * val)
 }
 
-pub fn day09() {
-    //let filename = "test.txt";
-    let filename = "src/inputs/day9.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-
-    let grid: Vec<Vec<usize>> = file
+pub fn day09(input: &str) -> (String, String) {
+    let grid: Vec<Vec<usize>> = input
         .lines()
         .map(|line| {
             line.chars()
@@ -168,6 +162,5 @@ pub fn day09() {
         })
         .collect();
 
-    println!("{}", part_1(&grid));
-    println!("{}", part_2(&grid));
+    (part_1(&grid).to_string(), part_2(&grid).to_string())
 }

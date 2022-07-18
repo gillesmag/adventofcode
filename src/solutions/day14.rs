@@ -1,12 +1,8 @@
 use std::collections::HashMap;
-use std::fs;
 
-pub fn day14() {
+pub fn day14(input: &str) -> (String, String) {
     //let filename = "test.txt";
-    let filename = "src/inputs/day14.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-    let lines = file.lines().collect::<Vec<&str>>();
+    let lines = input.lines().collect::<Vec<&str>>();
 
     let template = lines[0].clone().chars().collect::<Vec<char>>();
     let rules: HashMap<&str, char> = lines[2..]
@@ -46,9 +42,7 @@ pub fn day14() {
             let right = rules.get(&key.as_str()).unwrap();
             let mut triple: Vec<char> = key.clone().chars().collect();
             triple.insert(1, *right);
-            //println!("{:?} {:?} {:?} {:?}", key, val, right, triple);
             for win in triple.windows(2).map(|w| w.iter().collect::<String>()) {
-                //println!("{:?}", w);
                 let w = new_counts.entry(win).or_insert(0);
                 *w += val;
             }
@@ -87,6 +81,5 @@ pub fn day14() {
     let min = all_counts.values().into_iter().min().unwrap();
     let max = all_counts.values().into_iter().max().unwrap();
 
-    //println!("{:?}", all_counts);
-    println!("{}", max - min);
+    ((max - min).to_string(), "".to_string())
 }

@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use std::fs;
 
 fn parse_segment(positions: &Vec<usize>) -> Option<usize> {
     let segment_positions: Vec<Vec<usize>> = vec![
@@ -22,14 +21,8 @@ fn parse_segment(positions: &Vec<usize>) -> Option<usize> {
     None
 }
 
-pub fn day08() {
-    //let filename = "test1.txt";
-    //let filename = "test2.txt";
-    let filename = "src/inputs/day8.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-
-    let input = file
+pub fn day08(input: &str) -> (String, String) {
+    let lines = input
         .lines()
         .map(|line| {
             line.split(" | ")
@@ -48,7 +41,7 @@ pub fn day08() {
 
     let mut values: Vec<Option<usize>> = Vec::with_capacity(perms.len());
 
-    for line in &input {
+    for line in &lines {
         let (patterns, output) = (&line[0], &line[1]);
         let lengths = output.into_iter().map(|v| v.len()).collect::<Vec<usize>>();
 
@@ -101,6 +94,5 @@ pub fn day08() {
         }
     }
 
-    println!("Part A: {}", unique_counter);
-    println!("Part B: {}", total);
+    (unique_counter.to_string(), total.to_string())
 }

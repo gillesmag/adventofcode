@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::fs;
 use std::mem;
 
 fn count_fish(lanternfish: &Vec<u64>, days: u32) -> u64 {
@@ -33,16 +32,14 @@ fn count_fish(lanternfish: &Vec<u64>, days: u32) -> u64 {
         .sum()
 }
 
-pub fn day06() {
-    let filename = "src/inputs/day6.txt";
-    //let filename = "test.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-    let lanternfish: Vec<u64> = file.lines().collect::<Vec<&str>>()[0]
+pub fn day06(input: &str) -> (String, String) {
+    let lanternfish: Vec<u64> = input.lines().collect::<Vec<&str>>()[0]
         .split(",")
         .filter_map(|val| val.parse().ok())
         .collect();
 
-    println!("Part A: {}", count_fish(&lanternfish, 80));
-    println!("Part B: {}", count_fish(&lanternfish, 256));
+    (
+        count_fish(&lanternfish, 80).to_string(),
+        count_fish(&lanternfish, 256).to_string(),
+    )
 }

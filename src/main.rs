@@ -30,53 +30,30 @@ fn main() {
     let day: u8 = args[1].clone().parse().unwrap();
     let input = read_file("inputs", day);
 
-    match day {
-        1 => {
-            let (part_a, part_b) = day01(&input);
-            println!("Part A: {}", part_a);
-            println!("Part B: {}", part_b);
-            ()
-        }
-        2 => {
-            let (part_a, part_b) = day02(&input);
-            println!("Part A: {}", part_a);
-            println!("Part B: {}", part_b);
-            ()
-        }
-        3 => {
-            let (part_a, part_b) = day03(&input);
-            println!("Part A: {}", part_a);
-            println!("Part B: {}", part_b);
-            ()
-        }
-        4 => {
-            let (part_a, part_b) = day04(&input);
-            println!("Part A: {}", part_a);
-            println!("Part B: {}", part_b);
-            ()
-        }
-        5 => {
-            let (part_a, part_b) = day05(&input);
-            println!("Part A: {}", part_a);
-            println!("Part B: {}", part_b);
-            ()
-        }
-        6 => day06(),
-        7 => day07(),
-        8 => day08(),
-        9 => day09(),
-        10 => day10(),
-        //11 => day11(),
-        12 => day12(),
-        13 => day13(),
-        14 => day14(),
-        15 => day15(),
-        16 => day16(),
-        17 => day17(),
-        //18 => day18(),
-        //19 => day19(),
-        //20 => day20(),
-        21 => day21(),
-        _ => println!("day not solved: {}", day),
-    }
+    let (part_a, part_b) = match day {
+        1 => day01(&input),
+        2 => day02(&input),
+        3 => day03(&input),
+        4 => day04(&input),
+        5 => day05(&input),
+        6 => day06(&input),
+        7 => day07(&input),
+        8 => day08(&input),
+        9 => day09(&input),
+        10 => day10(&input),
+        //11 => day11(&input),
+        12 => day12(&input),
+        13 => day13(&input),
+        14 => day14(&input),
+        15 => day15(&input),
+        16 => day16(&input),
+        17 => day17(&input),
+        //18 => day18(&input),
+        //19 => day19(&input),
+        //20 => day20(&input),
+        21 => day21(&input),
+        _ => ("".to_string(), "".to_string()),
+    };
+    println!("Part A: {}", part_a);
+    println!("Part B: {}", part_b);
 }

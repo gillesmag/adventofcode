@@ -1,5 +1,4 @@
 use std::collections::{HashMap, HashSet};
-use std::fs;
 
 fn contains_twice(vals: &Vec<&str>) -> bool {
     let mut map: HashMap<&str, usize> = HashMap::new();
@@ -15,15 +14,12 @@ fn contains_twice(vals: &Vec<&str>) -> bool {
     map.values().into_iter().any(|&v| v == 2)
 }
 
-pub fn day12() {
+pub fn day12(input: &str) -> (String, String) {
     //let filename = "test_small.txt";
     //let filename = "test_medium.txt";
     //let filename = "test_large.txt";
-    let filename = "src/inputs/day12.txt";
 
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-
-    let edges: Vec<Vec<&str>> = file
+    let edges: Vec<Vec<&str>> = input
         .lines()
         .map(|line| line.split("-").collect::<Vec<&str>>())
         .collect();
@@ -95,5 +91,5 @@ pub fn day12() {
         }
     }
 
-    println!("{}", counter);
+    (counter.to_string(), "".to_string())
 }

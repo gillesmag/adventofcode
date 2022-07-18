@@ -1,6 +1,6 @@
 use itertools::iproduct;
 
-pub fn day21() {
+pub fn day21(input: &str) -> (String, String) {
     // TODO: read from file
     let mut scores = [0, 0];
     let mut positions = vec![(1..=10).cycle().skip(4), (1..=10).cycle().skip(6)];
@@ -26,8 +26,6 @@ pub fn day21() {
 
     let score = scores.into_iter().min().unwrap() * rolls * 3;
 
-    println!("{:?}", score);
-
     let i = (1..=3)
         .into_iter()
         .flat_map(|v| (1..=3).map(move |w| (v, w)))
@@ -37,5 +35,5 @@ pub fn day21() {
         println!("{:?} {:?} {:?}", i, j, k);
     }
 
-    println!("{:?}", i);
+    (score.to_string(), "".to_string())
 }

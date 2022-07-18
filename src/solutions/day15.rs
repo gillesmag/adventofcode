@@ -1,6 +1,5 @@
 use pathfinding::directed::dijkstra::dijkstra;
 use pathfinding::grid::Grid;
-use std::fs;
 
 fn total_risk(weights: &Vec<Vec<usize>>) -> Option<usize> {
     let (width, height) = (weights[0].len(), weights.len());
@@ -25,12 +24,8 @@ fn total_risk(weights: &Vec<Vec<usize>>) -> Option<usize> {
     }
 }
 
-pub fn day15() {
-    //let filename = "test.txt";
-    let filename = "src/inputs/day15.txt";
-
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-    let weights: Vec<Vec<usize>> = file
+fn parse(input: &str) -> Vec<Vec<usize>> {
+    input
         .lines()
         .map(|line| {
             line.chars()
@@ -38,10 +33,15 @@ pub fn day15() {
                 .filter_map(|v| String::from(v).parse().ok())
                 .collect::<Vec<usize>>()
         })
-        .collect();
+        .collect()
+}
 
-    println!("{}", total_risk(&weights).unwrap());
 
+fn part_a(weights: &Vec<Vec<usize>>) -> usize {
+    total_risk(&weights).unwrap()
+}
+
+fn part_b(weights: &Vec<Vec<usize>>) -> usize {
     let (width, height) = (weights[0].len(), weights.len());
     let mut new_weights = vec![vec![0usize; width * 5]; height * 5];
 
@@ -57,5 +57,11 @@ pub fn day15() {
         }
     }
 
-    println!("{}", total_risk(&new_weights).unwrap());
+    total_risk(&new_weights).unwrap()
+}
+
+pub fn day15(input: &str) -> (String, String) {
+    //let filename = "test.txt";
+    let weights = parse(input);
+    (part_a(&weights).to_string(), part_b(&weights).to_string())
 }

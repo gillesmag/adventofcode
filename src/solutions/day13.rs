@@ -1,5 +1,4 @@
 use std::collections::HashSet;
-use std::fs;
 
 type Instruction<'a> = (&'a str, usize);
 type Coordinate = (usize, usize);
@@ -39,12 +38,10 @@ fn fold(coords: &mut Vec<Coordinate>, instructions: &Vec<Instruction>) -> HashSe
     HashSet::from_iter(coords.iter().cloned())
 }
 
-pub fn day13() {
+pub fn day13(input: &str) -> (String, String) {
     //let filename = "test.txt";
-    let filename = "src/inputs/day13.txt";
 
-    let file = fs::read_to_string(filename).expect("Unable to read file");
-    let mut lines = file.lines().collect::<Vec<&str>>();
+    let mut lines = input.lines().collect::<Vec<&str>>();
 
     let coords_end = lines
         .iter()
@@ -76,9 +73,10 @@ pub fn day13() {
     // part A
     let single_instruction = instructions.clone().into_iter().take(1).collect();
     let new_coords = fold(&mut coords.clone(), &single_instruction);
-    println!("{}", new_coords.len());
 
     // part B
     let new_coords = fold(&mut coords.clone(), &instructions);
     print_coords(&new_coords);
+
+    (new_coords.len().to_string(), "".to_string())
 }
