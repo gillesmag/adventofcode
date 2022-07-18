@@ -57,6 +57,10 @@ fn parse(input: &str) -> Vec<Vec<(u32, u32)>> {
         .collect()
 }
 
+fn part_a(coordinates: Vec<Vec<(u32, u32)>>) -> usize {
+    1
+}
+
 fn part_b(coordinates: Vec<Vec<(u32, u32)>>) -> usize {
     let mut seen_coords: HashMap<Coordinate, usize> = HashMap::new();
 
@@ -77,4 +81,38 @@ fn part_b(coordinates: Vec<Vec<(u32, u32)>>) -> usize {
 pub fn day05(input: &str) -> (String, String) {
     let coordinates = parse(&input);
     ("?".to_string(), part_b(coordinates).to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 5);
+        let coordinates = parse(&input);
+        assert_eq!(part_a(coordinates), 5);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 5);
+        let coordinates = parse(&input);
+        assert_eq!(part_b(coordinates), 12);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 5);
+        let coordinates = parse(&input);
+        assert_eq!(part_a(coordinates), 8622);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 5);
+        let coordinates = parse(&input);
+        assert_eq!(part_b(coordinates), 22037);
+    }
 }

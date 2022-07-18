@@ -36,15 +36,15 @@ fn compute_score(board: &Board<u32>, marked_board: &Board<bool>) -> u32 {
 //    }
 //}
 
-pub fn day04(input: &str) -> (String, String) {
+fn parse(input: &str) -> (Vec<u32>, Vec<Board<u32>>) {
     let line_groups = input.split("\n\n").collect::<Vec<&str>>();
 
-    let draw_numbers: Vec<u32> = line_groups[0]
+    let draw_numbers = line_groups[0]
         .split(",")
         .filter_map(|num| num.parse().ok())
         .collect();
 
-    let boards: Vec<Board<u32>> = line_groups[1..]
+    let boards = line_groups[1..]
         .iter()
         .map(|board| {
             board
@@ -58,45 +58,88 @@ pub fn day04(input: &str) -> (String, String) {
         })
         .collect();
 
+    (draw_numbers, boards)
+}
+
+fn part_a(draw_numbers: &Vec<u32>, boards: &Vec<Board<u32>>) -> Option<u32> {
     let mut marked_boards: Vec<Board<bool>> = (0..boards.len())
         .into_iter()
         .map(|_| vec![false; 25])
         .collect();
 
-    let mut part_a_solution: Option<u32> = None;
-
-    'outer: for draw_num in &draw_numbers {
+    for draw_num in draw_numbers {
         mark_boards(*draw_num, &boards, &mut marked_boards);
         for (idx, marked_board) in marked_boards.iter().enumerate() {
             if check_board(&marked_board) {
                 let unmarked_score = compute_score(&boards[idx], &marked_boards[idx]);
-                let score = unmarked_score * draw_num;
-                part_a_solution = Some(score);
-                break 'outer;
+                return Some(unmarked_score * draw_num);
             }
         }
     }
 
+    None
+}
+
+fn part_b(draw_numbers: &Vec<u32>, boards: &Vec<Board<u32>>) -> u32 {
     let mut marked_boards: Vec<Board<bool>> = (0..boards.len())
         .into_iter()
         .map(|_| vec![false; 25])
         .collect();
 
-    let mut part_b_solution = 0u32;
+    let mut result = 0u32;
     let mut skip: Vec<usize> = vec![];
-    for draw_num in &draw_numbers {
+    for draw_num in draw_numbers {
         mark_boards(*draw_num, &boards, &mut marked_boards);
         for (idx, marked_board) in marked_boards.iter().enumerate() {
             if check_board(&marked_board) && !skip.contains(&idx) {
                 let unmarked_score = compute_score(&boards[idx], &marked_boards[idx]);
-                part_b_solution = unmarked_score * draw_num;
+                result = unmarked_score * draw_num;
                 skip.push(idx);
             }
         }
     }
 
+    result
+}
+
+pub fn day04(input: &str) -> (String, String) {
+    let (draw_numbers, boards) = parse(input);
     (
-        part_a_solution.unwrap().to_string(),
-        part_b_solution.to_string(),
+        part_a(&draw_numbers, &boards).unwrap().to_string(),
+        part_b(&draw_numbers, &boards).to_string(),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 4);
+        let (draw_numbers, boards) = parse(&input);
+        assert_eq!(part_a(&draw_numbers, &boards).unwrap(), 4512);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 4);
+        let (draw_numbers, boards) = parse(&input);
+        assert_eq!(part_b(&draw_numbers, &boards), 1924);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 4);
+        let (draw_numbers, boards) = parse(&input);
+        assert_eq!(part_a(&draw_numbers, &boards).unwrap(), 16674);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 4);
+        let (draw_numbers, boards) = parse(&input);
+        assert_eq!(part_b(&draw_numbers, &boards), 7075);
+    }
 }

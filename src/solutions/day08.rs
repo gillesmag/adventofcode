@@ -21,7 +21,7 @@ fn parse_segment(positions: &Vec<usize>) -> Option<usize> {
     None
 }
 
-pub fn day08(input: &str) -> (String, String) {
+fn parse(input: &str) -> (Vec<Vec<Vec<&str>>>, Vec<Vec<char>>) {
     let lines = input
         .lines()
         .map(|line| {
@@ -36,13 +36,14 @@ pub fn day08(input: &str) -> (String, String) {
         .permutations(7)
         .collect::<Vec<Vec<char>>>();
 
-    let mut unique_counter = 0;
-    let mut total = 0;
+    (lines, perms)
+}
 
-    let mut values: Vec<Option<usize>> = Vec::with_capacity(perms.len());
+fn part_a(lines: &Vec<Vec<Vec<&str>>>) -> u32 {
+    let mut unique_counter = 0u32;
 
-    for line in &lines {
-        let (patterns, output) = (&line[0], &line[1]);
+    for line in lines {
+        let output = &line[1];
         let lengths = output.into_iter().map(|v| v.len()).collect::<Vec<usize>>();
 
         for length in lengths {
@@ -50,6 +51,19 @@ pub fn day08(input: &str) -> (String, String) {
                 unique_counter += 1;
             }
         }
+    }
+
+    unique_counter
+}
+
+fn part_b(lines: &Vec<Vec<Vec<&str>>>, perms: &Vec<Vec<char>>) -> usize {
+    let mut total = 0;
+
+    let mut values: Vec<Option<usize>> = Vec::with_capacity(perms.len());
+
+    for line in lines {
+        let (patterns, output) = (&line[0], &line[1]);
+
         let sorted_patterns = patterns
             .into_iter()
             .map(|val| {
@@ -68,7 +82,7 @@ pub fn day08(input: &str) -> (String, String) {
             })
             .collect::<Vec<Vec<char>>>();
 
-        'outer: for perm in &perms {
+        'outer: for perm in perms {
             values.clear();
             for pattern in patterns {
                 let mut positions = pattern
@@ -94,5 +108,47 @@ pub fn day08(input: &str) -> (String, String) {
         }
     }
 
-    (unique_counter.to_string(), total.to_string())
+    total
+}
+
+pub fn day08(input: &str) -> (String, String) {
+    let (lines, perms) = parse(input);
+    (
+        part_a(&lines).to_string(),
+        part_b(&lines, &perms).to_string(),
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 8);
+        let (lines, _) = parse(&input);
+        assert_eq!(part_a(&lines), 26);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 8);
+        let (lines, perms) = parse(&input);
+        assert_eq!(part_b(&lines, &perms), 61229);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 8);
+        let (lines, _) = parse(&input);
+        assert_eq!(part_a(&lines), 456);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 8);
+        let (lines, perms) = parse(&input);
+        assert_eq!(part_b(&lines, &perms), 1091609);
+    }
 }

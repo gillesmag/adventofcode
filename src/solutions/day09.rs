@@ -25,7 +25,7 @@ fn adjacent_positions(pos: Coordinate, bounds: Coordinate) -> Vec<Coordinate> {
     positions
 }
 
-fn part_1(grid: &Grid) -> usize {
+fn part_a(grid: &Grid) -> usize {
     let bounds = (grid[0].len(), grid.len());
 
     let mut low_points: Vec<usize> = vec![];
@@ -57,7 +57,7 @@ fn print_grid(grid: &Vec<Vec<Option<usize>>>) {
     }
 }
 
-fn part_2(grid: &Grid) -> usize {
+fn part_b(grid: &Grid) -> usize {
     let bounds = (grid[0].len(), grid.len());
 
     println!("{:?}", bounds);
@@ -152,15 +152,52 @@ fn part_2(grid: &Grid) -> usize {
         .fold(1, |acc, val| acc * val)
 }
 
-pub fn day09(input: &str) -> (String, String) {
-    let grid: Vec<Vec<usize>> = input
+fn parse(input: &str) -> Grid {
+    input
         .lines()
         .map(|line| {
             line.chars()
                 .filter_map(|v| String::from(v).parse().ok())
                 .collect::<Vec<usize>>()
         })
-        .collect();
+        .collect()
+}
 
-    (part_1(&grid).to_string(), part_2(&grid).to_string())
+pub fn day09(input: &str) -> (String, String) {
+    let grid = parse(input);
+    (part_a(&grid).to_string(), part_b(&grid).to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 9);
+        let grid = parse(&input);
+        assert_eq!(part_a(&grid), 15);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 9);
+        let grid = parse(&input);
+        assert_eq!(part_b(&grid), 0);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 9);
+        let grid = parse(&input);
+        assert_eq!(part_a(&grid), 502);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 9);
+        let grid = parse(&input);
+        assert_eq!(part_b(&grid), 0);
+    }
 }

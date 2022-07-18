@@ -11,7 +11,7 @@ fn bitmap_filter(readings: &mut Vec<Vec<u32>>, bit_criteria: fn(u32, u32) -> boo
     None
 }
 
-pub fn part_a(readings: Vec<Vec<u32>>) -> u32 {
+pub fn part_a(readings: &Vec<Vec<u32>>) -> u32 {
     let rows = readings.len();
     let columns = readings[0].len();
 
@@ -34,19 +34,19 @@ pub fn part_a(readings: Vec<Vec<u32>>) -> u32 {
     gamma * epsilon
 }
 
-pub fn part_b(readings: Vec<Vec<u32>>) -> Option<u32> {
+pub fn part_b(readings: &Vec<Vec<u32>>) -> u32 {
     let o2_generator_rating = bitmap_filter(&mut readings.clone(), |ones, zeros| ones >= zeros);
     let co2_scrubber_rating = bitmap_filter(&mut readings.clone(), |ones, zeros| ones < zeros);
     match (o2_generator_rating, co2_scrubber_rating) {
         (Some(o2), Some(co2)) => Some(o2 * co2),
         _ => None,
     }
+    .unwrap()
 }
 
-pub fn day03(input: &str) -> (String, String) {
+fn parse(input: &str) -> Vec<Vec<u32>> {
     let lines: Vec<&str> = input.lines().into_iter().collect();
-
-    let readings: Vec<Vec<u32>> = lines
+    lines
         .clone()
         .into_iter()
         .map(|l| {
@@ -54,10 +54,44 @@ pub fn day03(input: &str) -> (String, String) {
                 .filter_map(|n| n.to_string().parse().ok())
                 .collect()
         })
-        .collect();
+        .collect()
+}
 
-    (
-        part_a(readings.clone()).to_string(),
-        part_b(readings.clone()).unwrap().to_string(),
-    )
+pub fn day03(input: &str) -> (String, String) {
+    let readings = parse(input);
+    (part_a(&readings).to_string(), part_b(&readings).to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 3);
+        let readings = parse(&input);
+        assert_eq!(part_a(&readings), 198);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 3);
+        let readings = parse(&input);
+        assert_eq!(part_b(&readings), 230);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 3);
+        let readings = parse(&input);
+        assert_eq!(part_a(&readings), 3148794);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 3);
+        let readings = parse(&input);
+        assert_eq!(part_b(&readings), 2795310);
+    }
 }

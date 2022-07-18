@@ -36,7 +36,6 @@ fn parse(input: &str) -> Vec<Vec<usize>> {
         .collect()
 }
 
-
 fn part_a(weights: &Vec<Vec<usize>>) -> usize {
     total_risk(&weights).unwrap()
 }

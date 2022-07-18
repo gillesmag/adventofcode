@@ -28,16 +28,30 @@ mod tests {
     use aoc::read_file;
 
     #[test]
-    fn test_part_a() {
+    fn test_example_part_a() {
         let input = read_file("examples", 1);
         let depths = to_depths(&input);
         assert_eq!(part_a(depths), 7);
     }
 
     #[test]
-    fn test_part_b() {
+    fn test_example_part_b() {
         let input = read_file("examples", 1);
         let depths = to_depths(&input);
         assert_eq!(part_b(depths), 5);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 1);
+        let depths = to_depths(&input);
+        assert_eq!(part_a(depths), 1832);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 1);
+        let depths = to_depths(&input);
+        assert_eq!(part_b(depths), 1858);
     }
 }

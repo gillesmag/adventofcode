@@ -66,16 +66,30 @@ mod tests {
     use aoc::read_file;
 
     #[test]
-    fn test_part_a() {
+    fn test_example_part_a() {
         let input = read_file("examples", 2);
         let lines = parse_lines(&input);
         assert_eq!(part_a(lines), 150);
     }
 
     #[test]
-    fn test_part_b() {
+    fn test_example_part_b() {
         let input = read_file("examples", 2);
         let lines = parse_lines(&input);
         assert_eq!(part_b(lines), 900);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 2);
+        let lines = parse_lines(&input);
+        assert_eq!(part_a(lines), 2147104);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 2);
+        let lines = parse_lines(&input);
+        assert_eq!(part_b(lines), 2044620088);
     }
 }

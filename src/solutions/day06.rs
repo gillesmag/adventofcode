@@ -32,14 +32,59 @@ fn count_fish(lanternfish: &Vec<u64>, days: u32) -> u64 {
         .sum()
 }
 
-pub fn day06(input: &str) -> (String, String) {
-    let lanternfish: Vec<u64> = input.lines().collect::<Vec<&str>>()[0]
+fn parse(input: &str) -> Vec<u64> {
+    input.lines().collect::<Vec<&str>>()[0]
         .split(",")
         .filter_map(|val| val.parse().ok())
-        .collect();
+        .collect()
+}
 
+fn part_a(lanternfish: &Vec<u64>) -> u64 {
+    count_fish(&lanternfish, 80)
+}
+
+fn part_b(lanternfish: &Vec<u64>) -> u64 {
+    count_fish(&lanternfish, 256)
+}
+
+pub fn day06(input: &str) -> (String, String) {
+    let lanternfish = parse(input);
     (
-        count_fish(&lanternfish, 80).to_string(),
-        count_fish(&lanternfish, 256).to_string(),
+        part_a(&lanternfish).to_string(),
+        part_b(&lanternfish).to_string(),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 6);
+        let lanternfish = parse(&input);
+        assert_eq!(part_a(&lanternfish), 5934);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 6);
+        let lanternfish = parse(&input);
+        assert_eq!(part_b(&lanternfish), 26984457539);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 6);
+        let lanternfish = parse(&input);
+        assert_eq!(part_a(&lanternfish), 345793);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 6);
+        let lanternfish = parse(&input);
+        assert_eq!(part_b(&lanternfish), 1572643095893);
+    }
 }

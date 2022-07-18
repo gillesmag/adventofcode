@@ -179,7 +179,10 @@ fn parse(input: &str) -> Packet {
 
 pub fn day16(input: &str) -> (String, String) {
     let packet = parse(input);
-    (compute_sum(packet.clone()).to_string(), eval_packet(packet).to_string())
+    (
+        compute_sum(packet.clone()).to_string(),
+        eval_packet(packet).to_string(),
+    )
 }
 
 #[cfg(test)]
