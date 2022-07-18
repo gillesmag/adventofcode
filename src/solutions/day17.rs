@@ -63,3 +63,38 @@ pub fn day17(input: &str) -> (String, String) {
     let (xs, ys) = parse(input);
     (part_a(&ys).to_string(), part_b(&xs, &ys).to_string())
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 17);
+        let (_, ys) = parse(&input);
+        assert_eq!(part_a(&ys), 45);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 17);
+        let (xs, ys) = parse(&input);
+        assert_eq!(part_b(&xs, &ys), 112);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 17);
+        let (_, ys) = parse(&input);
+        assert_eq!(part_a(&ys), 2278);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 17);
+        let (xs, ys) = parse(&input);
+        assert_eq!(part_b(&xs, &ys), 996);
+    }
+}
