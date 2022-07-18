@@ -1,4 +1,6 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
+
+type Graph<'a> = HashMap<&'a str, Vec<&'a str>>;
 
 fn contains_twice(vals: &Vec<&str>) -> bool {
     let mut map: HashMap<&str, usize> = HashMap::new();
@@ -14,18 +16,13 @@ fn contains_twice(vals: &Vec<&str>) -> bool {
     map.values().into_iter().any(|&v| v == 2)
 }
 
-pub fn day12(input: &str) -> (String, String) {
-    //let filename = "test_small.txt";
-    //let filename = "test_medium.txt";
-    //let filename = "test_large.txt";
-
+fn parse(input: &str) -> Graph {
     let edges: Vec<Vec<&str>> = input
         .lines()
         .map(|line| line.split("-").collect::<Vec<&str>>())
         .collect();
 
-    let mut graph: HashMap<&str, Vec<&str>> = HashMap::new();
-    let mut vertices: HashSet<&str> = HashSet::new();
+    let mut graph = HashMap::new();
 
     for edge in &edges {
         let (start, end) = (edge[0], edge[1]);
@@ -34,9 +31,6 @@ pub fn day12(input: &str) -> (String, String) {
         start_edges.push(end);
         let end_edges = graph.entry(end).or_insert(vec![]);
         end_edges.push(start);
-
-        vertices.insert(start);
-        vertices.insert(end);
     }
 
     // Graph preprocessing
@@ -46,12 +40,10 @@ pub fn day12(input: &str) -> (String, String) {
         *val = v;
     }
     graph.remove("end");
+    graph
+}
 
-    let mut visited: HashMap<&str, bool> = HashMap::new();
-    for k in vertices.iter() {
-        visited.entry(k).or_insert(false);
-    }
-
+fn process_graph(graph: Graph, visit_twice: bool) -> usize {
     let mut prefixes = vec![vec!["start"]];
     let mut new_prefixes: Vec<Vec<&str>> = vec![];
     let mut counter = 0;
@@ -61,8 +53,9 @@ pub fn day12(input: &str) -> (String, String) {
             let l = prefix.last().unwrap();
             if let Some(next) = graph.get(l) {
                 for n in next {
+                    let at_least_once = if visit_twice {contains_twice(&prefix)  } else { true };
                     if (prefix.contains(&n) && n.chars().all(|v| v.is_ascii_lowercase()))
-                        && contains_twice(&prefix)
+                        && at_least_once
                     {
                         continue;
                     }
@@ -90,6 +83,56 @@ pub fn day12(input: &str) -> (String, String) {
             break;
         }
     }
+    counter
+}
 
-    (counter.to_string(), "".to_string())
+fn part_a(graph: Graph) -> usize {
+    process_graph(graph, false)
+}
+
+fn part_b(graph: Graph) -> usize {
+    process_graph(graph, true)
+}
+
+pub fn day12(input: &str) -> (String, String) {
+    //let filename = "test_small.txt";
+    //let filename = "test_medium.txt";
+    //let filename = "test_large.txt";
+    let graph = parse(input);
+    (part_a(graph.clone()).to_string(), part_b(graph).to_string())
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 12);
+        let graph = parse(&input);
+        assert_eq!(part_a(graph), 226);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 12);
+        let graph = parse(&input);
+        assert_eq!(part_b(graph), 3509);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 12);
+        let graph = parse(&input);
+        assert_eq!(part_a(graph), 4241);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 12);
+        let graph = parse(&input);
+        assert_eq!(part_b(graph), 122134);
+    }
 }
