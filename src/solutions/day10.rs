@@ -28,23 +28,17 @@ fn process_line(line: &str) -> (Vec<char>, Option<char>) {
 }
 
 fn part_a(lines: &Vec<&str>) -> u32 {
-    let mut points = 0u32;
-
-    for line in lines {
-        let (_, non_matching) = process_line(line);
-
-        if let Some(non_matching) = non_matching {
-            points += match non_matching {
-                ')' => 3,
-                ']' => 57,
-                '}' => 1197,
-                '>' => 25137,
-                _ => unreachable!(),
-            };
-        }
-    }
-
-    points
+    lines
+        .into_iter()
+        .filter_map(|line| process_line(line).1)
+        .map(|c| match c {
+            ')' => 3,
+            ']' => 57,
+            '}' => 1197,
+            '>' => 25137,
+            _ => 0,
+        })
+        .sum()
 }
 
 fn part_b(lines: &Vec<&str>) -> usize {
