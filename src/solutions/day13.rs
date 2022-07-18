@@ -3,17 +3,20 @@ use std::collections::HashSet;
 type Instruction<'a> = (&'a str, usize);
 type Coordinate = (usize, usize);
 
-fn print_coords(coords: &HashSet<Coordinate>) {
+fn visualize_paper(coords: &HashSet<Coordinate>) -> Vec<&str> {
+    let mut output: Vec<&str> = vec![];
     let max_x = coords.into_iter().map(|v| v.0).max().unwrap();
     let max_y = coords.into_iter().map(|v| v.1).max().unwrap();
 
     (0..=max_y).into_iter().for_each(|y| {
-        (0..=max_x)
+        let mut chars = (0..=max_x)
             .into_iter()
             .map(|x| if coords.contains(&(x, y)) { "█" } else { " " })
-            .for_each(|c| print!("{}", c));
-        println!("");
+            .collect::<Vec<&str>>();
+        chars.push("\n");
+        output.append(&mut chars);
     });
+    output
 }
 
 fn fold(coords: &mut Vec<Coordinate>, instructions: &Vec<Instruction>) -> HashSet<Coordinate> {
@@ -38,9 +41,7 @@ fn fold(coords: &mut Vec<Coordinate>, instructions: &Vec<Instruction>) -> HashSe
     HashSet::from_iter(coords.iter().cloned())
 }
 
-pub fn day13(input: &str) -> (String, String) {
-    //let filename = "test.txt";
-
+fn parse(input: &str) -> (Vec<Coordinate>, Vec<Instruction>) {
     let mut lines = input.lines().collect::<Vec<&str>>();
 
     let coords_end = lines
@@ -70,13 +71,74 @@ pub fn day13(input: &str) -> (String, String) {
         .map(|v| (v[0], v[1].parse::<usize>().unwrap()))
         .collect::<Vec<Instruction>>();
 
-    // part A
+    (coords, instructions)
+}
+
+fn part_a(coords: &Vec<Coordinate>, instructions: &Vec<Instruction>) -> usize {
     let single_instruction = instructions.clone().into_iter().take(1).collect();
-    let new_coords = fold(&mut coords.clone(), &single_instruction);
+    fold(&mut coords.clone(), &single_instruction).len()
+}
 
-    // part B
-    let new_coords = fold(&mut coords.clone(), &instructions);
-    print_coords(&new_coords);
+fn part_b(coords: &Vec<Coordinate>, instructions: &Vec<Instruction>) -> String {
+    let coordinates = fold(&mut coords.clone(), &instructions);
+    visualize_paper(&coordinates).join("")
+}
 
-    (new_coords.len().to_string(), "".to_string())
+pub fn day13(input: &str) -> (String, String) {
+    let (coords, instructions) = parse(input);
+    let mut newline = "\n".to_owned();
+    let code = part_b(&coords, &instructions);
+    newline.push_str(&code);
+    (part_a(&coords, &instructions).to_string(), newline)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 13);
+        let (coords, instructions) = parse(&input);
+        assert_eq!(part_a(&coords, &instructions), 17);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 13);
+        let (coords, instructions) = parse(&input);
+        assert_eq!(
+            part_b(&coords, &instructions),
+            "█████
+█   █
+█   █
+█   █
+█████
+"
+        );
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 13);
+        let (coords, instructions) = parse(&input);
+        assert_eq!(part_a(&coords, &instructions), 664);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 13);
+        let (coords, instructions) = parse(&input);
+        assert_eq!(
+            part_b(&coords, &instructions),
+            "████ ████   ██ █  █ ████ █    ███  █   
+█    █       █ █ █     █ █    █  █ █   
+███  ███     █ ██     █  █    ███  █   
+█    █       █ █ █   █   █    █  █ █   
+█    █    █  █ █ █  █    █    █  █ █   
+████ █     ██  █  █ ████ ████ ███  ████
+"
+        );
+    }
 }
