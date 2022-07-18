@@ -1,166 +1,133 @@
-use std::collections::HashMap;
-
-type Grid = Vec<Vec<usize>>;
-type Coordinate = (usize, usize);
-
-fn adjacent_positions(pos: Coordinate, bounds: Coordinate) -> Vec<Coordinate> {
-    let mut positions = vec![];
-
-    if pos.0 >= 1 {
-        positions.push((pos.0 - 1, pos.1));
-    }
-
-    if pos.0 + 1 < bounds.0 {
-        positions.push((pos.0 + 1, pos.1));
-    }
-
-    if pos.1 >= 1 {
-        positions.push((pos.0, pos.1 - 1));
-    }
-
-    if pos.1 + 1 < bounds.1 {
-        positions.push((pos.0, pos.1 + 1));
-    }
-
-    positions
+struct Grid {
+    items: Vec<Vec<u32>>,
 }
 
-fn part_a(grid: &Grid) -> usize {
-    let bounds = (grid[0].len(), grid.len());
+impl Grid {
+    fn new(items: Vec<Vec<u32>>) -> Grid {
+        Grid { items }
+    }
 
-    let mut low_points: Vec<usize> = vec![];
+    fn bounds(&self) -> (usize, usize) {
+        (self.items[0].len(), self.items.len())
+    }
+
+    fn at(&self, x: usize, y: usize) -> u32 {
+        self.items[y][x]
+    }
+
+    fn adjacent_positions(&self, x: usize, y: usize) -> Vec<(usize, usize)> {
+        let mut positions = vec![];
+
+        if x >= 1 {
+            positions.push((x - 1, y));
+        }
+
+        if x + 1 < self.bounds().0 {
+            positions.push((x + 1, y));
+        }
+
+        if y >= 1 {
+            positions.push((x, y - 1));
+        }
+
+        if y + 1 < self.bounds().1 {
+            positions.push((x, y + 1));
+        }
+
+        positions
+    }
+}
+
+fn compute_low_points(grid: &Grid) -> Vec<(usize, usize)> {
+    let bounds = grid.bounds();
+    let mut low_points = vec![];
 
     for (x, y) in (0..bounds.1).flat_map(|y| (0..bounds.0).map(move |x| (x, y))) {
-        let value = grid[y][x];
-        let adj = adjacent_positions((x, y), bounds);
+        let value = grid.at(x, y);
+        let adj = grid.adjacent_positions(x, y);
 
-        let min_val = adj.into_iter().map(|(x, y)| grid[y][x]).min().unwrap();
+        let min_val = adj.into_iter().map(|(x, y)| grid.at(x, y)).min().unwrap();
         if value < min_val {
-            low_points.push(value);
+            low_points.push((x, y));
         }
     }
-    low_points.into_iter().map(|v| v + 1).sum::<usize>()
+
+    low_points
 }
 
-fn print_grid(grid: &Vec<Vec<Option<usize>>>) {
-    let (rows, columns) = (grid.len(), grid[0].len());
+fn part_a(grid: &Grid) -> u32 {
+    compute_low_points(grid)
+        .into_iter()
+        .map(|(x, y)| grid.at(x, y) + 1)
+        .sum()
+}
 
-    for y in 1..rows - 1 {
-        for x in 1..columns - 1 {
-            if let Some(cell) = grid[y][x] {
-                print!("{}", cell);
-            } else {
-                print!(" ");
+fn compute_basin_size(grid: &Grid, point: (usize, usize)) -> usize {
+    let (columns, rows) = grid.bounds();
+    let mut visited = (0..rows)
+        .into_iter()
+        .map(|_| {
+            (0..columns)
+                .into_iter()
+                .map(|_| false)
+                .collect::<Vec<bool>>()
+        })
+        .collect::<Vec<Vec<bool>>>();
+    visited[point.1][point.0] = true;
+
+    let mut positions_queue: Vec<(usize, usize)> = vec![];
+    positions_queue.append(&mut grid.adjacent_positions(point.0, point.1).clone());
+
+    let mut size = 1usize;
+    while positions_queue.len() > 0 {
+        let mut remove_positions: Vec<(usize, usize)> = vec![];
+        let mut process_queue: Vec<(usize, usize)> = vec![];
+        for v in &positions_queue {
+            let value = grid.at(v.0, v.1);
+            if visited[v.1][v.0] || value == 9 {
+                remove_positions.push(*v);
+                continue;
             }
+
+            size += 1;
+            visited[v.1][v.0] = true;
+            process_queue.append(&mut grid.adjacent_positions(v.0, v.1).clone());
         }
-        println!("");
+
+        for v in remove_positions {
+            positions_queue.retain(|&x| x != v);
+        }
+        positions_queue.append(&mut process_queue);
     }
+    size
 }
 
 fn part_b(grid: &Grid) -> usize {
-    let bounds = (grid[0].len(), grid.len());
+    // 1. get adjacent positions for low points
+    // 2. check if their value is greater than current low point
+    // 3. if so (and it is not 9) add add 1 and add them as a point to explore as well
+    //compute_low_points(grid)
+    let mut basin_sizes: Vec<usize> = vec![];
 
-    println!("{:?}", bounds);
-
-    let mut padded_grid = vec![vec![9; bounds.0 + 2]; bounds.1 + 2];
-
-    for (y, row) in grid.into_iter().enumerate() {
-        for (x, &cell) in row.into_iter().enumerate() {
-            padded_grid[y + 1][x + 1] = cell;
-        }
+    for low_point in compute_low_points(grid) {
+        basin_sizes.push(compute_basin_size(grid, low_point));
     }
-
-    let mut count_grid: Vec<Vec<Option<usize>>> = vec![vec![None; bounds.0 + 2]; bounds.1 + 2];
-
-    let mut counter = 0usize;
-
-    for y in 1..=bounds.1 {
-        for x in 1..=bounds.0 {
-            if padded_grid[y][x] == 9 {
-                continue;
-            }
-            let adj = adjacent_positions((x, y), (bounds.0 + 1, bounds.1 + 1));
-            //print!("{} ", padded_grid[y][x]);
-            // 1. set value for myself from neighbours (if any, otherwise set to counter)
-            // 2. forward value to neighbours if possible
-            let mut neighbours = adj
-                .iter()
-                .filter_map(|&(x, y)| count_grid[y][x])
-                .collect::<Vec<usize>>();
-            neighbours.sort();
-            neighbours.dedup();
-            if neighbours.len() == 0 {
-                count_grid[y][x] = Some(counter);
-                counter += 1;
-            } else if neighbours.len() == 1 {
-                count_grid[y][x] = Some(neighbours[0]);
-            } else {
-                // fix neighbours
-                let min_neighbour = neighbours.iter().min().unwrap();
-                let indexed_neighbours = adj
-                    .iter()
-                    .filter_map(|&(x, y)| {
-                        if count_grid[y][x].is_some() {
-                            Some(((x, y), count_grid[y][x].unwrap()))
-                        } else {
-                            None
-                        }
-                    })
-                    .collect::<Vec<((usize, usize), usize)>>();
-                for ((nx, ny), val) in indexed_neighbours {
-                    if val != *min_neighbour {
-                        count_grid[ny][nx] = Some(*min_neighbour);
-                    }
-                }
-                count_grid[y][x] = Some(*min_neighbour);
-                //print_grid(&count_grid);
-                //println!("{:?}", (x, y));
-                //panic!("{:?}", neighbours);
-            }
-            let indexed_neighbours = adj
-                .iter()
-                .map(|&(x, y)| ((x, y), padded_grid[y][x]))
-                .collect::<Vec<((usize, usize), usize)>>();
-            for &((nx, ny), neighbour) in &indexed_neighbours {
-                if neighbour == 9 {
-                    continue;
-                }
-
-                padded_grid[ny][nx] = padded_grid[y][x];
-            }
-            //println!("{:?}", indexed_neighbours);
-            //println!("{:?}", count_grid);
-        }
-    }
-    print_grid(&count_grid);
-
-    let mut totals: HashMap<usize, usize> = HashMap::new();
-    for y in 1..=bounds.1 {
-        for x in 1..=bounds.0 {
-            if let Some(val) = count_grid[y][x] {
-                totals.entry(val).and_modify(|v| *v += 1).or_insert(1);
-            }
-        }
-    }
-
-    let mut biggest = totals.values().into_iter().collect::<Vec<&usize>>();
-    biggest.sort();
-    biggest
-        .into_iter()
-        .rev()
-        .take(3)
-        .fold(1, |acc, val| acc * val)
+    basin_sizes.sort();
+    println!("size: {:?}", basin_sizes);
+    basin_sizes.into_iter().rev().take(3).product::<usize>()
 }
 
 fn parse(input: &str) -> Grid {
-    input
-        .lines()
-        .map(|line| {
-            line.chars()
-                .filter_map(|v| String::from(v).parse().ok())
-                .collect::<Vec<usize>>()
-        })
-        .collect()
+    Grid::new(
+        input
+            .lines()
+            .map(|line| {
+                line.chars()
+                    .filter_map(|v| String::from(v).parse().ok())
+                    .collect::<Vec<u32>>()
+            })
+            .collect(),
+    )
 }
 
 pub fn day09(input: &str) -> (String, String) {
@@ -184,7 +151,7 @@ mod tests {
     fn test_example_part_b() {
         let input = read_file("examples", 9);
         let grid = parse(&input);
-        assert_eq!(part_b(&grid), 0);
+        assert_eq!(part_b(&grid), 1134);
     }
 
     #[test]
@@ -198,6 +165,6 @@ mod tests {
     fn test_input_part_b() {
         let input = read_file("inputs", 9);
         let grid = parse(&input);
-        assert_eq!(part_b(&grid), 0);
+        assert_eq!(part_b(&grid), 1330560);
     }
 }
