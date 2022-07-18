@@ -60,7 +60,6 @@ fn part_b(weights: &Vec<Vec<usize>>) -> usize {
 }
 
 pub fn day15(input: &str) -> (String, String) {
-    //let filename = "test.txt";
     let weights = parse(input);
     (part_a(&weights).to_string(), part_b(&weights).to_string())
 }

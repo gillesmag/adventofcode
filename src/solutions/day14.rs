@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
-pub fn day14(input: &str) -> (String, String) {
-    //let filename = "test.txt";
+fn parse(input: &str) -> (HashMap<String, usize>, HashMap<&str, char>) {
     let lines = input.lines().collect::<Vec<&str>>();
 
     let template = lines[0].clone().chars().collect::<Vec<char>>();
@@ -25,11 +24,12 @@ pub fn day14(input: &str) -> (String, String) {
         counts.entry(tuple).and_modify(|v| *v += 1);
     }
 
-    let mut new_counts: HashMap<String, usize> = HashMap::new();
+    (counts, rules)
+}
 
-    // Uncomment below for part 1 solution
-    // let steps = 10;
-    let steps = 40;
+fn solve(counts: HashMap<String, usize>, rules: HashMap<&str, char>, steps: usize) -> usize {
+    let mut counts = counts;
+    let mut new_counts: HashMap<String, usize> = HashMap::new();
     for _step in 1..=steps {
         let keys = counts
             .clone()
@@ -81,5 +81,55 @@ pub fn day14(input: &str) -> (String, String) {
     let min = all_counts.values().into_iter().min().unwrap();
     let max = all_counts.values().into_iter().max().unwrap();
 
-    ((max - min).to_string(), "".to_string())
+    max - min
+}
+
+fn part_a(counts: HashMap<String, usize>, rules: HashMap<&str, char>) -> usize {
+    solve(counts, rules, 10)
+}
+
+fn part_b(counts: HashMap<String, usize>, rules: HashMap<&str, char>) -> usize {
+    solve(counts, rules, 40)
+}
+
+pub fn day14(input: &str) -> (String, String) {
+    let (counts, rules) = parse(input);
+    (
+        part_a(counts.clone(), rules.clone()).to_string(),
+        part_b(counts.clone(), rules.clone()).to_string(),
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 14);
+        let (counts, rules) = parse(&input);
+        assert_eq!(part_a(counts, rules), 1588);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 14);
+        let (counts, rules) = parse(&input);
+        assert_eq!(part_b(counts, rules), 2188189693529);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 14);
+        let (counts, rules) = parse(&input);
+        assert_eq!(part_a(counts, rules), 2408);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 14);
+        let (counts, rules) = parse(&input);
+        assert_eq!(part_b(counts, rules), 2651311098752);
+    }
 }
