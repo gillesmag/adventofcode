@@ -1,0 +1,25 @@
+x = 0
+y = 0
+z = 0
+w = 0
+
+w = int(input())
+x = 0
+x += z
+x %= 26
+z //= 1
+x += 10
+x = int(x == w)
+x = int(x == 0)
+y = 0
+y += 25
+y *= x
+y += 1
+z *= y
+y = 0
+y += w
+y += 12
+y *= x
+z += y
+
+print("w={} x={} y={} z={}".format(w, x, y, z))
