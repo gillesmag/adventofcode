@@ -59,7 +59,6 @@ fn part_b(xs: &Vec<i32>, ys: &Vec<i32>) -> usize {
 }
 
 pub fn day17(input: &str) -> (String, String) {
-    //let filename = "test.txt";
     let (xs, ys) = parse(input);
     (part_a(&ys).to_string(), part_b(&xs, &ys).to_string())
 }

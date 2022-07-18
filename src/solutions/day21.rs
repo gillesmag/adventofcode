@@ -1,6 +1,6 @@
 use itertools::iproduct;
 
-pub fn day21(input: &str) -> (String, String) {
+pub fn day21(_input: &str) -> (String, String) {
     // TODO: read from file
     let mut scores = [0, 0];
     let mut positions = vec![(1..=10).cycle().skip(4), (1..=10).cycle().skip(6)];
