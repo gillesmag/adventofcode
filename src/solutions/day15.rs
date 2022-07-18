@@ -64,3 +64,37 @@ pub fn day15(input: &str) -> (String, String) {
     let weights = parse(input);
     (part_a(&weights).to_string(), part_b(&weights).to_string())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use aoc::read_file;
+
+    #[test]
+    fn test_example_part_a() {
+        let input = read_file("examples", 15);
+        let weights = parse(&input);
+        assert_eq!(part_a(&weights), 40);
+    }
+
+    #[test]
+    fn test_example_part_b() {
+        let input = read_file("examples", 15);
+        let weights = parse(&input);
+        assert_eq!(part_b(&weights), 315);
+    }
+
+    #[test]
+    fn test_input_part_a() {
+        let input = read_file("inputs", 15);
+        let weights = parse(&input);
+        assert_eq!(part_a(&weights), 714);
+    }
+
+    #[test]
+    fn test_input_part_b() {
+        let input = read_file("inputs", 15);
+        let weights = parse(&input);
+        assert_eq!(part_b(&weights), 2948);
+    }
+}

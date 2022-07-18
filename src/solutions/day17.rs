@@ -64,7 +64,6 @@ pub fn day17(input: &str) -> (String, String) {
     (part_a(&ys).to_string(), part_b(&xs, &ys).to_string())
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
