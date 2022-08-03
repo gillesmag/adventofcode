@@ -13,7 +13,7 @@ use solutions::day07::day07;
 use solutions::day08::day08;
 use solutions::day09::day09;
 use solutions::day10::day10;
-//use solutions::day11::day11;
+use solutions::day11::day11;
 use solutions::day12::day12;
 use solutions::day13::day13;
 use solutions::day14::day14;
@@ -41,7 +41,7 @@ fn main() {
         8 => day08(&input),
         9 => day09(&input),
         10 => day10(&input),
-        //11 => day11(&input),
+        11 => day11(&input),
         12 => day12(&input),
         13 => day13(&input),
         14 => day14(&input),

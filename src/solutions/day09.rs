@@ -1,42 +1,4 @@
-struct Grid {
-    items: Vec<Vec<u32>>,
-}
-
-impl Grid {
-    fn new(items: Vec<Vec<u32>>) -> Grid {
-        Grid { items }
-    }
-
-    fn bounds(&self) -> (usize, usize) {
-        (self.items[0].len(), self.items.len())
-    }
-
-    fn at(&self, x: usize, y: usize) -> u32 {
-        self.items[y][x]
-    }
-
-    fn adjacent_positions(&self, x: usize, y: usize) -> Vec<(usize, usize)> {
-        let mut positions = vec![];
-
-        if x >= 1 {
-            positions.push((x - 1, y));
-        }
-
-        if x + 1 < self.bounds().0 {
-            positions.push((x + 1, y));
-        }
-
-        if y >= 1 {
-            positions.push((x, y - 1));
-        }
-
-        if y + 1 < self.bounds().1 {
-            positions.push((x, y + 1));
-        }
-
-        positions
-    }
-}
+use aoc::Grid;
 
 fn compute_low_points(grid: &Grid) -> Vec<(usize, usize)> {
     let bounds = grid.bounds();
@@ -113,7 +75,6 @@ fn part_b(grid: &Grid) -> usize {
         basin_sizes.push(compute_basin_size(grid, low_point));
     }
     basin_sizes.sort();
-    println!("size: {:?}", basin_sizes);
     basin_sizes.into_iter().rev().take(3).product::<usize>()
 }
 
