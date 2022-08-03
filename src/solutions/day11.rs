@@ -117,7 +117,11 @@ fn step(grid: &mut Grid, flashed: &mut Vec<Vec<bool>>) {
 
 pub fn day11(input: &str) -> (String, String) {
     let mut grid = parse(input);
-    (part_a(&mut grid, 200).to_string(), "".to_string())
+    let mut grid2 = parse(input);
+    (
+        part_a(&mut grid, 200).to_string(),
+        part_b(&mut grid2).to_string(),
+    )
 }
 
 #[cfg(test)]
