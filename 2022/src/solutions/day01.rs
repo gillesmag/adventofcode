@@ -3,10 +3,11 @@ use itertools::Itertools;
 fn parse_input(lines: &str) -> Vec<Vec<usize>> {
     lines
         .split("\n\n")
-        .map(|l|
-             l.lines().map(|v| v.parse::<usize>().unwrap())
-             .collect::<Vec<_>>()
-        )
+        .map(|l| {
+            l.lines()
+                .map(|v| v.parse::<usize>().unwrap())
+                .collect::<Vec<_>>()
+        })
         .collect::<Vec<Vec<_>>>()
 }
 
@@ -26,14 +27,12 @@ fn part_b(lines: &str) -> usize {
         .into_iter()
         .sorted()
         .rev()
-        .take(3).sum::<usize>()
+        .take(3)
+        .sum::<usize>()
 }
 
 pub fn day01(input: &str) -> (String, String) {
-    (
-        part_a(input).to_string(),
-        part_b(input).to_string(),
-    )
+    (part_a(input).to_string(), part_b(input).to_string())
 }
 
 #[cfg(test)]
