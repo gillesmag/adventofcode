@@ -1,2 +1,8 @@
 .DS_Store
+
+# Rust
 target/
+
+# Python
+*.pyc
+__pycache__
