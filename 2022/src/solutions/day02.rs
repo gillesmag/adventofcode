@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 #[derive(Debug, PartialEq)]
 enum Move {
     Rock,
@@ -5,29 +7,21 @@ enum Move {
     Scissors,
 }
 
-fn parse_input(lines: &str) -> Vec<Vec<Move>> {
-    lines
+fn parse(input: &str) -> Vec<(Move, Move)> {
+    input
         .lines()
-        .map(|l| {
-            l.split(" ")
+        .map(|line| {
+            line.split(" ")
                 .map(|v| match v {
                     "A" | "X" => Move::Rock,
                     "B" | "Y" => Move::Paper,
                     "C" | "Z" => Move::Scissors,
                     _ => panic!("Unexpected character"),
                 })
-                .collect::<Vec<_>>()
+                .collect_tuple()
+                .unwrap()
         })
-        .collect::<Vec<Vec<_>>>()
-}
-
-fn is_win(opponent: &Move, player: &Move) -> bool {
-    match (opponent, player) {
-        (Move::Scissors, Move::Rock) => true,
-        (Move::Paper, Move::Scissors) => true,
-        (Move::Rock, Move::Paper) => true,
-        _ => false,
-    }
+        .collect()
 }
 
 fn losing_move(opponent: &Move) -> Move {
@@ -46,10 +40,6 @@ fn winning_move(opponent: &Move) -> Move {
     }
 }
 
-fn is_draw(opponent: &Move, player: &Move) -> bool {
-    player == opponent
-}
-
 fn shape_score(m: &Move) -> usize {
     match m {
         Move::Rock => 1,
@@ -58,49 +48,43 @@ fn shape_score(m: &Move) -> usize {
     }
 }
 
-fn part_a(lines: &str) -> usize {
-    let input = parse_input(lines);
-    let mut player_score = 0;
-    for round in input {
-        let mut current_score = 0;
+fn part_a(rounds: &Vec<(Move, Move)>) -> usize {
+    rounds
+        .into_iter()
+        .map(|(opponent, player)| {
+            let is_win = match (opponent, player) {
+                (Move::Scissors, Move::Rock) => true,
+                (Move::Paper, Move::Scissors) => true,
+                (Move::Rock, Move::Paper) => true,
+                _ => false,
+            };
 
-        let (opponent, player) = (&round[0], &round[1]);
-        let is_player_win = !is_draw(opponent, player) && is_win(opponent, player);
-        current_score += shape_score(player);
-
-        if is_draw(opponent, player) {
-            current_score += 3;
-        } else {
-            if is_player_win {
-                current_score += 6;
-            }
-        }
-
-        println!("{}", current_score);
-        player_score += current_score;
-    }
-    player_score
+            shape_score(player)
+                + if is_win {
+                    6
+                } else if opponent == player {
+                    3
+                } else {
+                    0
+                }
+        })
+        .sum()
 }
 
-fn part_b(lines: &str) -> usize {
-    let input = parse_input(lines);
-    let mut player_score = 0;
-    for round in input {
-        let (opponent, player) = (&round[0], &round[1]);
-
-        let current_score = match player {
+fn part_b(rounds: &Vec<(Move, Move)>) -> usize {
+    rounds
+        .into_iter()
+        .map(|(opponent, player)| match player {
             Move::Rock => shape_score(&losing_move(opponent)) + 0,
             Move::Paper => shape_score(opponent) + 3,
             Move::Scissors => shape_score(&winning_move(opponent)) + 6,
-        };
-
-        player_score += current_score;
-    }
-    player_score
+        })
+        .sum()
 }
 
 pub fn day02(input: &str) -> (String, String) {
-    (part_a(input).to_string(), part_b(input).to_string())
+    let input = parse(input);
+    (part_a(&input).to_string(), part_b(&input).to_string())
 }
 
 #[cfg(test)]
@@ -111,24 +95,24 @@ mod tests {
     #[test]
     fn test_example_part_a() {
         let input = read_file("examples", 2);
-        assert_eq!(part_a(&input), 15);
+        assert_eq!(part_a(&parse(&input)), 15);
     }
 
     #[test]
     fn test_example_part_b() {
         let input = read_file("examples", 2);
-        assert_eq!(part_b(&input), 12);
+        assert_eq!(part_b(&parse(&input)), 12);
     }
 
     #[test]
     fn test_input_part_a() {
         let input = read_file("inputs", 2);
-        assert_eq!(part_a(&input), 15572);
+        assert_eq!(part_a(&parse(&input)), 15572);
     }
 
     #[test]
     fn test_input_part_b() {
         let input = read_file("inputs", 2);
-        assert_eq!(part_b(&input), 16098);
+        assert_eq!(part_b(&parse(&input)), 16098);
     }
 }
