@@ -5,6 +5,7 @@ mod solutions;
 
 use solutions::day01::day01;
 use solutions::day02::day02;
+use solutions::day03::day03;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -14,6 +15,7 @@ fn main() {
     let (part_a, part_b) = match day {
         1 => day01(&input),
         2 => day02(&input),
+        3 => day03(&input),
         _ => ("".to_string(), "".to_string()),
     };
     println!("Part A: {}", part_a);
