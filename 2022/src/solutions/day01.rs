@@ -1,38 +1,24 @@
 use itertools::Itertools;
 
-fn parse_input(lines: &str) -> Vec<Vec<usize>> {
-    lines
+fn parse(input: &str) -> impl Iterator<Item = usize> + '_ {
+    input
         .split("\n\n")
-        .map(|l| {
-            l.lines()
-                .map(|v| v.parse::<usize>().unwrap())
-                .collect::<Vec<_>>()
-        })
-        .collect::<Vec<Vec<_>>>()
+        .map(|l| l.lines().map(|v| v.parse::<usize>().unwrap()).sum())
 }
 
-fn part_a(lines: &str) -> usize {
-    parse_input(lines)
-        .iter()
-        .map(|snacks| snacks.iter().sum::<usize>())
-        .max()
-        .unwrap()
+fn part_a(lines: impl Iterator<Item = usize>) -> usize {
+    lines.max().unwrap()
 }
 
-fn part_b(lines: &str) -> usize {
-    parse_input(lines)
-        .iter()
-        .map(|snacks| snacks.iter().sum::<usize>())
-        .sorted()
-        .into_iter()
-        .sorted()
-        .rev()
-        .take(3)
-        .sum::<usize>()
+fn part_b(lines: impl Iterator<Item = usize>) -> usize {
+    lines.sorted().rev().take(3).sum()
 }
 
 pub fn day01(input: &str) -> (String, String) {
-    (part_a(input).to_string(), part_b(input).to_string())
+    (
+        part_a(parse(&input)).to_string(),
+        part_b(parse(&input)).to_string(),
+    )
 }
 
 #[cfg(test)]
@@ -42,25 +28,25 @@ mod tests {
 
     #[test]
     fn test_example_part_a() {
-        let input = read_file("examples", 1);
-        assert_eq!(part_a(&input), 24000);
+        let input = &read_file("examples", 1);
+        assert_eq!(part_a(parse(input)), 24000);
     }
 
     #[test]
     fn test_example_part_b() {
-        let input = read_file("examples", 1);
-        assert_eq!(part_b(&input), 45000);
+        let input = &read_file("examples", 1);
+        assert_eq!(part_b(parse(input)), 45000);
     }
 
     #[test]
     fn test_input_part_a() {
-        let input = read_file("inputs", 1);
-        assert_eq!(part_a(&input), 74711);
+        let input = &read_file("inputs", 1);
+        assert_eq!(part_a(parse(input)), 74711);
     }
 
     #[test]
     fn test_input_part_b() {
-        let input = read_file("inputs", 1);
-        assert_eq!(part_b(&input), 209481);
+        let input = &read_file("inputs", 1);
+        assert_eq!(part_b(parse(input)), 209481);
     }
 }
