@@ -6,6 +6,7 @@ mod solutions;
 use solutions::day01::day01;
 use solutions::day02::day02;
 use solutions::day03::day03;
+use solutions::day04::day04;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -16,6 +17,7 @@ fn main() {
         1 => day01(&input),
         2 => day02(&input),
         3 => day03(&input),
+        4 => day04(&input),
         _ => ("".to_string(), "".to_string()),
     };
     println!("Part A: {}", part_a);
