@@ -52,24 +52,24 @@ mod tests {
     #[test]
     fn test_example_part_a() {
         let input = read_file("examples", 4);
-        assert_eq!(part_a(parse(&input)), 2);
+        assert_eq!(part_a(parse(&input.unwrap())), 2);
     }
 
     #[test]
     fn test_example_part_b() {
         let input = read_file("examples", 4);
-        assert_eq!(part_b(parse(&input)), 4);
+        assert_eq!(part_b(parse(&input.unwrap())), 4);
     }
 
     #[test]
     fn test_input_part_a() {
         let input = read_file("inputs", 4);
-        assert_eq!(part_a(parse(&input)), 448);
+        assert_eq!(part_a(parse(&input.unwrap())), 448);
     }
 
     #[test]
     fn test_input_part_b() {
         let input = read_file("inputs", 4);
-        assert_eq!(part_b(parse(&input)), 794);
+        assert_eq!(part_b(parse(&input.unwrap())), 794);
     }
 }

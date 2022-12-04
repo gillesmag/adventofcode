@@ -8,18 +8,29 @@ use solutions::day02::day02;
 use solutions::day03::day03;
 use solutions::day04::day04;
 
-fn main() {
-    let args: Vec<String> = env::args().collect();
-    let day: u8 = args[1].clone().parse().unwrap();
-    let input = read_file("inputs", day);
+fn main() -> Result<(), &'static str> {
+    let day: u8 = match env::args().nth(1) {
+        Some(num) => match num.parse() {
+            Ok(n) => n,
+            Err(_) => return Err("Invalid number"),
+        },
+        None => return Err("Missing argument: day"),
+    };
+
+    let input = match read_file("inputs", day) {
+        Ok(s) => s,
+        Err(_) => return Err("could not open input file"),
+    };
 
     let (part_a, part_b) = match day {
         1 => day01(&input),
         2 => day02(&input),
         3 => day03(&input),
         4 => day04(&input),
-        _ => ("".to_string(), "".to_string()),
+        _ => return Err("Unknown day"),
     };
     println!("Part A: {}", part_a);
     println!("Part B: {}", part_b);
+
+    Ok(())
 }

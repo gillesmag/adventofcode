@@ -1,7 +1,7 @@
 use std::env;
 use std::fs;
 
-pub fn read_file(directory: &str, day: u8) -> String {
+pub fn read_file(directory: &str, day: u8) -> Result<String, std::io::Error> {
     let cwd = env::current_dir().unwrap();
 
     let filepath = cwd
@@ -9,6 +9,5 @@ pub fn read_file(directory: &str, day: u8) -> String {
         .join(directory)
         .join(format!("day{:02}.txt", day));
 
-    let f = fs::read_to_string(filepath);
-    f.expect("could not open input file")
+    fs::read_to_string(filepath)
 }

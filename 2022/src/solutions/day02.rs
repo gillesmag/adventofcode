@@ -95,24 +95,24 @@ mod tests {
     #[test]
     fn test_example_part_a() {
         let input = read_file("examples", 2);
-        assert_eq!(part_a(&parse(&input)), 15);
+        assert_eq!(part_a(&parse(&input.unwrap())), 15);
     }
 
     #[test]
     fn test_example_part_b() {
         let input = read_file("examples", 2);
-        assert_eq!(part_b(&parse(&input)), 12);
+        assert_eq!(part_b(&parse(&input.unwrap())), 12);
     }
 
     #[test]
     fn test_input_part_a() {
         let input = read_file("inputs", 2);
-        assert_eq!(part_a(&parse(&input)), 15572);
+        assert_eq!(part_a(&parse(&input.unwrap())), 15572);
     }
 
     #[test]
     fn test_input_part_b() {
         let input = read_file("inputs", 2);
-        assert_eq!(part_b(&parse(&input)), 16098);
+        assert_eq!(part_b(&parse(&input.unwrap())), 16098);
     }
 }
