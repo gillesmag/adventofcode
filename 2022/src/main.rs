@@ -8,6 +8,7 @@ use solutions::day02::day02;
 use solutions::day03::day03;
 use solutions::day04::day04;
 use solutions::day05::day05;
+use solutions::day06::day06;
 
 fn main() -> Result<(), &'static str> {
     let day: u8 = match env::args().nth(1) {
@@ -29,8 +30,10 @@ fn main() -> Result<(), &'static str> {
         3 => day03(&input),
         4 => day04(&input),
         5 => day05(&input),
+        6 => day06(&input),
         _ => return Err("Unknown day"),
     };
+
     println!("Part A: {}", part_a);
     println!("Part B: {}", part_b);
 
