@@ -1,11 +1,11 @@
 fn parse(input: &str) {
 }
 
-fn part_a(sections: Sections) -> usize {
+fn part_a(input: &str) -> usize {
     0
 }
 
-fn part_b(sections: Sections) -> usize {
+fn part_b(input: &str) -> usize {
     0
 }
 
