@@ -23,10 +23,7 @@ fn part_b(input: &str) -> usize {
 }
 
 pub fn day06(input: &str) -> (String, String) {
-    (
-        part_a(&input).to_string(),
-        part_b(&input).to_string(),
-    )
+    (part_a(&input).to_string(), part_b(&input).to_string())
 }
 
 #[cfg(test)]

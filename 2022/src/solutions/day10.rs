@@ -4,7 +4,6 @@ enum Instruction {
     Addx(i64),
 }
 
-
 fn tick(instructions: &Vec<Instruction>) -> Vec<(usize, i64)> {
     let mut states = vec![];
     let mut register_x = 1;
@@ -12,7 +11,7 @@ fn tick(instructions: &Vec<Instruction>) -> Vec<(usize, i64)> {
         match instruction {
             Instruction::Noop => {
                 states.push(register_x);
-            },
+            }
             Instruction::Addx(val) => {
                 states.push(register_x);
                 states.push(register_x);
@@ -20,7 +19,10 @@ fn tick(instructions: &Vec<Instruction>) -> Vec<(usize, i64)> {
             }
         }
     }
-    states.into_iter().enumerate().collect::<Vec<(usize, i64)>>()
+    states
+        .into_iter()
+        .enumerate()
+        .collect::<Vec<(usize, i64)>>()
 }
 
 fn parse(input: &str) -> Vec<Instruction> {
@@ -42,8 +44,8 @@ fn parse(input: &str) -> Vec<Instruction> {
 fn part_a(instructions: &Vec<Instruction>) -> i64 {
     tick(&instructions)
         .iter()
-        .map(|(cycle, val)| (cycle+1, val))
-        .filter(|(cycle, _)| (20+cycle) % 40 == 0)
+        .map(|(cycle, val)| (cycle + 1, val))
+        .filter(|(cycle, _)| (20 + cycle) % 40 == 0)
         .map(|(cycle, register)| (cycle as i64) * register)
         .sum()
 }
@@ -60,7 +62,7 @@ fn part_b(instructions: &Vec<Instruction>) -> String {
         let mut current_col = 0;
         for (_, value) in row {
             let v = (value + 1) as usize;
-            if (current_col..=current_col+2).contains(&v) {
+            if (current_col..=current_col + 2).contains(&v) {
                 crt[current_row][current_col] = '#';
             }
             current_col += 1;
@@ -70,10 +72,7 @@ fn part_b(instructions: &Vec<Instruction>) -> String {
 }
 
 pub fn day10(input: &str) -> (String, String) {
-    (
-        part_a(&parse(&input)).to_string(),
-        part_b(&parse(&input)),
-    )
+    (part_a(&parse(&input)).to_string(), part_b(&parse(&input)))
 }
 
 #[cfg(test)]
@@ -106,7 +105,6 @@ mod tests {
         let input = read_file("examples", 10);
         assert_eq!(part_b(&parse(&input.unwrap())), expected);
     }
-
 
     #[test]
     fn test_input_part_b() {
