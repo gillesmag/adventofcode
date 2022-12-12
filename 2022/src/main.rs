@@ -12,6 +12,7 @@ use solutions::day06::day06;
 // use solutions::day07::day07;
 
 use solutions::day10::day10;
+use solutions::day11::day11;
 
 fn main() -> Result<(), &'static str> {
     let day: u8 = match env::args().nth(1) {
@@ -36,6 +37,7 @@ fn main() -> Result<(), &'static str> {
         6 => day06(&input),
         // 7 => day07(&input),
         10 => day10(&input),
+        11 => day11(&input),
         _ => return Err("Unknown day"),
     };
 
