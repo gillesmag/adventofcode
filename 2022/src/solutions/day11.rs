@@ -8,7 +8,7 @@ struct Monkey<'a> {
 fn parse(input: &str) -> Vec<(Vec<u64>, Monkey)> {
     input.split("\n\n").map(|group| {
         let mut lines = group.split("\n");
-        let monkey_id = lines.next();
+        let _monkey_id = lines.next();
         let starting_items_line = lines.next().unwrap();
         let items = starting_items_line
             .split(": ")
