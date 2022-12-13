@@ -1,4 +1,5 @@
-fn parse(input: &str) {
+fn parse(input: &str) -> &str {
+    "hello"
 }
 
 fn part_a(input: &str) -> usize {
