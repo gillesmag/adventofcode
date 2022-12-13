@@ -2,74 +2,81 @@
 struct Monkey<'a> {
     operation: Vec<&'a str>,
     test: u64,
-    branch_result: (usize, usize)
+    branch_result: (usize, usize),
 }
 
 fn parse(input: &str) -> Vec<(Vec<u64>, Monkey)> {
-    input.split("\n\n").map(|group| {
-        let mut lines = group.split("\n");
-        let _monkey_id = lines.next();
-        let starting_items_line = lines.next().unwrap();
-        let items = starting_items_line
-            .split(": ")
-            .nth(1)
-            .unwrap()
-            .split(", ")
-            .map(|item| item.parse::<u64>().unwrap()).collect::<Vec<_>>();
+    input
+        .split("\n\n")
+        .map(|group| {
+            let mut lines = group.split("\n");
+            let _monkey_id = lines.next();
+            let starting_items_line = lines.next().unwrap();
+            let items = starting_items_line
+                .split(": ")
+                .nth(1)
+                .unwrap()
+                .split(", ")
+                .map(|item| item.parse::<u64>().unwrap())
+                .collect::<Vec<_>>();
 
-        let operation_line = lines.next().unwrap();
-        let op_statement = operation_line
-            .split(": ")
-            .nth(1)
-            .unwrap()
-            .split("=")
-            .nth(1)
-            .unwrap()
-            .trim()
-            .split(" ")
-            .collect::<Vec<_>>();
+            let operation_line = lines.next().unwrap();
+            let op_statement = operation_line
+                .split(": ")
+                .nth(1)
+                .unwrap()
+                .split("=")
+                .nth(1)
+                .unwrap()
+                .trim()
+                .split(" ")
+                .collect::<Vec<_>>();
 
-        let test_line = lines.next();
-        let divisible_by = test_line
-            .unwrap()
-            .split(": ")
-            .nth(1)
-            .unwrap()
-            .split(" ")
-            .nth(2)
-            .unwrap()
-            .parse::<u64>()
-            .unwrap();
+            let test_line = lines.next();
+            let divisible_by = test_line
+                .unwrap()
+                .split(": ")
+                .nth(1)
+                .unwrap()
+                .split(" ")
+                .nth(2)
+                .unwrap()
+                .parse::<u64>()
+                .unwrap();
 
-        let true_branch = lines
-            .next()
-            .unwrap()
-            .split(": ")
-            .nth(1)
-            .unwrap()
-            .split(" ")
-            .nth(3)
-            .unwrap()
-            .parse::<usize>()
-            .unwrap();
-        let false_branch = lines
-            .next()
-            .unwrap()
-            .split(": ")
-            .nth(1)
-            .unwrap()
-            .split(" ")
-            .nth(3)
-            .unwrap()
-            .parse::<usize>()
-            .unwrap();
+            let true_branch = lines
+                .next()
+                .unwrap()
+                .split(": ")
+                .nth(1)
+                .unwrap()
+                .split(" ")
+                .nth(3)
+                .unwrap()
+                .parse::<usize>()
+                .unwrap();
+            let false_branch = lines
+                .next()
+                .unwrap()
+                .split(": ")
+                .nth(1)
+                .unwrap()
+                .split(" ")
+                .nth(3)
+                .unwrap()
+                .parse::<usize>()
+                .unwrap();
 
-        (items, Monkey {
-            operation: op_statement,
-            test: divisible_by,
-            branch_result: (true_branch, false_branch)
+            (
+                items,
+                Monkey {
+                    operation: op_statement,
+                    test: divisible_by,
+                    branch_result: (true_branch, false_branch),
+                },
+            )
         })
-    }).collect::<Vec<_>>()
+        .collect::<Vec<_>>()
 }
 
 fn part_a(monkeys: Vec<(Vec<u64>, Monkey)>) -> usize {

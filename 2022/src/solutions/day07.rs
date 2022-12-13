@@ -67,7 +67,13 @@ fn parse(input: &str) -> FileSystem {
 
     for group in groups {
         let lines = group.lines();
-        let cli = lines.clone().nth(0).unwrap().trim().split(" ").collect::<Vec<_>>();
+        let cli = lines
+            .clone()
+            .nth(0)
+            .unwrap()
+            .trim()
+            .split(" ")
+            .collect::<Vec<_>>();
         let command = cli[0];
         let output = lines.skip(1).collect::<Vec<_>>();
 
@@ -85,9 +91,12 @@ fn parse(input: &str) -> FileSystem {
                     .collect::<Vec<_>>();
 
                 if child_dir.len() == 1 {
-                    current_dir = *child_dir[0] ;
+                    current_dir = *child_dir[0];
                 } else {
-                    panic!("unknown child {} in {}", dir, fs.arena[current_dir].val.name);
+                    panic!(
+                        "unknown child {} in {}",
+                        dir, fs.arena[current_dir].val.name
+                    );
                 }
             }
         } else if command == "ls" {
@@ -130,8 +139,7 @@ fn get_size(fs: &FileSystem, node_id: usize) -> usize {
 
 fn part_a(input: &str) -> usize {
     let fs = parse(&input);
-    fs
-        .arena
+    fs.arena
         .iter()
         .filter(|node| node.val.fs_type == FSEntryType::Directory)
         .map(|dir| get_size(&fs, dir.idx))
@@ -143,8 +151,7 @@ fn part_b(input: &str) -> usize {
     let fs = parse(&input);
     let used = 70000000 - get_size(&fs, 0);
     let needed = 30000000 - used;
-    fs
-        .arena
+    fs.arena
         .iter()
         .filter(|node| node.val.fs_type == FSEntryType::Directory)
         .map(|dir| get_size(&fs, dir.idx))

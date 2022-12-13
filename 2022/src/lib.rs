@@ -18,7 +18,9 @@ pub struct Grid<T> {
 }
 
 impl<T> Grid<T>
-where T: ToString {
+where
+    T: ToString,
+{
     pub fn new(items: Vec<Vec<T>>) -> Grid<T> {
         Grid {
             items,
