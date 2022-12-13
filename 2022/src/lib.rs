@@ -12,6 +12,7 @@ pub fn read_file(directory: &str, day: u8) -> Result<String, std::io::Error> {
     fs::read_to_string(filepath)
 }
 
+#[derive(Debug, Clone)]
 pub struct Grid<T> {
     pub items: Vec<Vec<T>>,
     include_diagonals: bool,
