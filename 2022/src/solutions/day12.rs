@@ -95,7 +95,7 @@ fn part_a((grid, start, end): (Grid<char>, (usize, usize), (usize, usize))) -> u
     shortest_path((grid, start, end)).unwrap()
 }
 
-fn part_b((grid, start, end): (Grid<char>, (usize, usize), (usize, usize))) -> usize {
+fn part_b((grid, _start, end): (Grid<char>, (usize, usize), (usize, usize))) -> usize {
     let (columns, rows) = grid.bounds();
     (0..rows)
         .flat_map(|y| {

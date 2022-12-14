@@ -96,7 +96,7 @@ where
     }
 
     pub fn print(&self) {
-        let (rows, columns) = self.bounds();
+        let (columns, rows) = self.bounds();
 
         for y in 0..rows {
             for x in 0..columns {
