@@ -1,10 +1,17 @@
 from config import INPUTS_DIR, EXAMPLES_DIR
 from pathlib import Path
 import importlib
+import argparse
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--day", type=int, help="Day to run")
+    args = parser.parse_args()
+
     days = sorted([p.stem for p in Path(__file__).parent.glob("day*.py")])
+    if args.day:
+        days = [f"day{args.day:02d}"]
 
     for didx, day in enumerate(days):
         module = importlib.import_module(day)
